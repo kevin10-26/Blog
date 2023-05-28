@@ -1,0 +1,169 @@
+{% extends "Layout.html" %}
+{% block content %}
+
+	<article class="sm:grid sm:grid-cols-3 sm:grid-rows-4 w-full">
+		<div class="row-start-1 row-end-5">
+			<hr class="w-6 border-teal-600 border-solid border-2 ml-4" />
+			<h2 class="text-3xl text-stone-800 font-semibold underline mb-10 dark:text-teal-300 ml-4">Dernières publications</h2>
+
+			<div class="px-8 w-full">
+				{% for l_post in main['posts']['latest'] %}
+					<div class="my-8 border-b-solid border-b-2 border-b-stone-800 last:border-0 w-full">
+						<div class="w-full h-32 my-4">
+							<img class="w-full h-full object-cover" src="./public/img/blog/thumbnails/{{ l_post['thumbnail'] }}" alt="Miniature de la publication : {{ l_post['title'] }}." />
+						</div>
+
+						<div>
+							<p class="my-2 text-xl text-stone-800 font-semibold dark:text-gray-400">
+								{{ l_post['title'] }}
+							</p>
+
+							<p class="my-2 text-justify text-stone-700 dark:text-gray-300">
+								{{ l_post['description'] }}
+							</p>
+
+							<div class="flex flex-row justify-between text-gray-600 items-center gap-x-8 mt-4 pb-6 text-sm dark:text-gray-400">
+								<p>
+									<i class="fa-solid fa-clock"></i>&nbsp;&nbsp;{{ l_post['dt_upload'] }}
+								</p>
+
+								<p>
+									<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;{{ (l_post['views'] > 0) ? l_post['views'] : 0 }}
+								</p>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<div class="dark:text-gray-300">
+						<p>
+							Il n'y a pas encore de publications
+						</p>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="row-start-1 row-end-3 col-start-2 col-end-4 w-full">
+			<hr class="w-6 border-teal-600 border-solid border-2 ml-4" />
+			<h2 class="text-3xl text-stone-800 font-semibold underline mb-10 dark:text-teal-300 ml-4">Publication du moment</h2>
+
+			<div class="px-8 my-8">
+				{% set bestPost = main['posts']['cover']['bestPost'] %}
+
+				<div>
+					<div class="w-full h-72">
+						<img class="w-full h-full object-cover" src="./public/img/blog/thumbnails/{{ bestPost['thumbnail'] }}" alt="Miniature de la publication : {{ bestPost['title'] }}." />
+					</div>
+
+					<div>
+						<p class="my-2 text-2xl text-stone-800 font-semibold dark:text-gray-400">
+							{{ bestPost['title'] }}
+						</p>
+
+						<p class="my-2 text-justify text-stone-700 dark:text-gray-300">
+							{{ bestPost['description'] }}
+						</p>
+
+						<div class="flex flex-row justify-start items-center gap-x-6 dark:text-gray-300">
+							<p class="px-6 py-2 w-auto rounded-xl bg-teal-600 text-white w-fit">
+								<i class="fa-solid fa-layer-group"></i>&nbsp;&nbsp;{{ bestPost['domain'] }}
+							</p>
+
+							<p class="px-6 py-2 w-auto rounded-xl border-2 border-solid border-teal-600 w-fit">
+								<i class="fa-solid fa-list"></i>&nbsp;&nbsp;{{ bestPost['category'] }}
+							</p>
+						</div>
+
+						<div class="flex flex-row justify-center gap-x-2 text-gray-600 items-center gap-x-8 mt-4 pb-6 dark:text-gray-300">
+							<p>
+								<i class="fa-solid fa-clock"></i>&nbsp;&nbsp;{{ bestPost['dt_upload'] }}
+							</p>
+
+							<p>
+								<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;{{ (bestPost['views'] > 0) ? bestPost['views'] : 0 }}
+							</p>
+
+							<p>
+								<i class="fa-solid fa-angle-up"></i>&nbsp;&nbsp;{{ (bestPost['upvotes'] > 0) ? bestPost['upvotes'] : 0 }}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row-start-3 row-end-5 col-start-2 col-end-4 w-full">
+			<hr class="w-6 border-teal-600 border-solid border-2 ml-4" />
+			<h2 class="text-3xl text-stone-800 font-semibold underline mb-10 dark:text-teal-300 ml-4">Publications populaires</h2>
+
+			<div class="flex sm:flex-row flex-col justify-between items-start">
+				{% set popularPosts = main['posts']['cover']['popularPosts'] %}
+				{% for p_post in popularPosts %}
+					<div class="my-8 px-8 border-r-solid border-r-2 border-r-stone-800 last:border-0">
+						<div class="w-full h-32 my-4">
+							<img class="w-full h-full object-cover" src="./public/img/blog/thumbnails/{{ p_post['thumbnail'] }}" alt="Miniature de la publication : {{ p_post['title'] }}." />
+						</div>
+
+						<div>
+							<p class="my-2 text-xl text-stone-800 font-semibold dark:text-gray-400">
+								{{ p_post['title'] }}
+							</p>
+
+							<p class="my-2 text-justify text-stone-700 dark:text-gray-300">
+								{{ p_post['description'] }}
+							</p>
+
+							<div class="flex flex-row justify-start items-center gap-x-6 dark:text-gray-300">
+								<p class="px-6 py-2 w-auto rounded-xl bg-teal-600 text-white w-fit">
+									<i class="fa-solid fa-layer-group"></i>&nbsp;&nbsp;{{ bestPost['domain'] }}
+								</p>
+
+								<p class="px-6 py-2 w-auto rounded-xl border-2 border-solid border-teal-600 w-fit">
+									<i class="fa-solid fa-list"></i>&nbsp;&nbsp;{{ bestPost['category'] }}
+								</p>
+							</div>
+
+							<div class="flex flex-row justify-between text-gray-600 items-center gap-x-8 mt-4 pb-6 text-sm dark:text-gray-300">
+								<p>
+									<i class="fa-solid fa-clock"></i>&nbsp;&nbsp;{{ p_post['dt_upload'] }}
+								</p>
+
+								<p>
+									<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;{{ (p_post['views'] > 0) ? p_post['views'] : 0 }}
+								</p>
+							</div>
+						</div>
+					</div>
+				{% else %}
+					<div class="dark:text-gray-300">
+						<p>
+							Il n'y a pas encore de publications
+						</p>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</article>
+
+	<article>
+
+		{% set announce = main['announce'] %}
+		<div id="last-announce" class="w-full sm:w-4/5 m-auto bg-gray-200 dark:bg-gray-600 px-6 py-4 mb-10">
+			<h2 class="font-semibold text-gray-800 dark:text-gray-200 text-xl text-center mb-4">Annonce : {{ announce['title'] }} </h2>
+
+			<p class="dark:text-gray-100">
+				{{ announce['description'] }}
+			</p>
+
+			<div class="mt-6 flex flex-col sm:flex-row gap-y-4 sm:gap-y-0 justify-around items-center">
+				<button class="rounded-md border-white border-2 border-solid px-8 py-4 dark:text-gray-200 font-semibold hover:bg-gray-300 hover:dark:bg-gray-800 transition-all" onclick="window.location.href = './announces';">
+					<i class="fa-solid fa-list"></i>&nbsp;&nbsp;Liste des annonces
+				</button>
+
+				<button class="rounded-md px-8 py-4 bg-teal-800 font-semibold text-white hover:border-teal-600 hover:border-solid hover:border-2 hover:bg-transparent hover:text-black transition-all dark:text-gray-200" onclick="window.location.href = './announces/view-{{ announce['id'] }}';">
+					<i class="fa-solid fa-book-open"></i>&nbsp;&nbsp;Lire cette annonce
+				</button>
+			</div>
+		</div>
+	</article>
+{% endblock %}

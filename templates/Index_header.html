@@ -1,0 +1,38 @@
+<article class="relative sm:mb-52 mb-6">
+	<div class="relative flex flex-col justify-center items-center sm:h-96 h-[30rem] z-[1]">
+		<img loading="lazy" class="block h-full w-full object-cover z-[1] grayscale-[80%] blur-sm" src="{{ header['background'] }}" alt="La bannière du site." />
+
+		<div class="absolute z-[2] w-full sm:w-3/4 p-8 my-4 sm:my-auto text-white">
+
+			<div>
+				<h1 class="text-center font-semibold text-4xl my-4">Bienvenue sur mon site !</h1>
+
+				<p class="text-center text-lg">
+					Salut ! Je m'appelle Kévin et je suis étudiant en licence de droit. Ma principale motivation est de devenir juriste en droit du numérique ! Tu peux suivre mon parcours sur ce site, à travers diverses publications. 
+				</p>
+			</div>
+
+			<div class="my-2 flex flex-col sm:flex-row justify-center items-center sm:gap-x-8 gap-y-4 sm:gap-y-0">
+				<button class="rounded-md border-white border-2 border-solid px-8 py-2 font-semibold hover:bg-gray-600 transition-all" onclick="window.location.href = './about';">
+					À PROPOS DE MOI
+				</button>
+
+				<button class="rounded-md px-8 py-2 bg-teal-800 font-semibold" onclick="window.location.href = '?action=blog';">
+					MES PUBLICATIONS
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="sm:absolute sm:left-1/2 sm:top-1/2 sm:translate-x-[-50%] sm:translate-y-[60%] mt-8 sm:mt-auto grid grid-cols-2 gap-4 sm:gap-0 sm:grid-cols-4 place-items-center sm:w-4/5 w-full p-4 m-auto gap-x-0 z-[1]">
+		{% for card in header['headerCards'] %}
+			<div class="group flex flex-col justify-center items-center w-44 sm:w-full h-44 px-8 py-4 gap-y-4 bg-gray-300 dark:bg-gray-600 dark:text-gray-200 border border-gray-200 border-solid mx-0 hover:cursor-pointer hover:bg-teal-600 hover:scale-110 hover:text-white hover:cursor-pointer rounded-sm" onclick="window.location.href = '/kevin1026/{{ card[1] }}';">
+				<div>
+					<i class="text-3xl sm:text-6xl text-teal-600 dark:text-teal-300 group-hover:text-white {{ card[2] }}"></i>
+				</div>
+
+				<p class="text-center font-semibold text-lg text-stone-700 group-hover:text-white dark:text-teal-300">{{ card[0] }}</p>
+			</div>
+		{% endfor %}
+	</div>
+</article>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="./public/dist/output.css" />
+	<title>{{title}}</title>
+
+	<style type="text/css">
+		* {
+			transition: all 0.3s;
+		}
+	</style>
+
+	<script src="./public/js/theme.js"></script>
+</head>
+<body class="dark:bg-slate-700">
+
+	<header class="sticky top-0 z-[2]">
+	    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+	        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
+	            <a href="./index" class="flex items-center">
+	                <img src="./public/img/misc/logo_transparent.png" class="mr-3 h-6 sm:h-9" alt="Website Logo" />
+	                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Kévin1026</span>
+	            </a>
+	            <div class="flex items-center lg:order-2">
+	                <a href="./home" class="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">{{ user['session'] ? user['name'] : 'Se connecter' }}</a>
+
+	                <div class="flex md:order-2">
+							      
+					<!-- Dark mode switcher -->
+					    <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+					    <svg id="theme-toggle-dark-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					    	<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+					      </svg>
+					      <svg id="theme-toggle-light-icon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+					        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+					      </svg>
+					    </button>
+				    <!-- Dark mode switcher end -->
+					</div>
+
+	                <button onclick="toggleNavbar(event);" data-collapse-toggle="mobile-menu-2" type="button" class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mobile-menu-2" aria-expanded="false">
+	                    <span class="sr-only">Open main menu</span>
+	                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
+	                    <svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+	                </button>
+	            </div>
+
+	            <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+	                <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+		                {% for item in menuItems %}
+		                    <li>
+		                        <a href="{{ item['href'] }}" class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-primary-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">{{ item['text'] }}</a>
+		                    </li>
+						{% endfor %}
+	                </ul>
+	            </div>
+	        </div>
+	    </nav>
+	</header>
+
+	{% if isIndex is defined %}
+		{{ include('./Index_header.html', {card}) }}
+	{% endif %}
+
+	<main class="flex flex-col sm:flex-row flex-wrap justify-around items-start">
+
+		<section class="sm:w-3/4 w-full">
+			{% block content %}
+			{% endblock content %}
+		</section>
+
+		<aside class="flex flex-col sm:w-1/5 w-full gap-y-8">
+			<div>
+				<div class="w-full border-b-teal-600 border-b-2 border-b-solid py-4 px-6">
+					<p class="text-center text-lg font-semibold">
+						Derniers commentaires
+					</p>
+				</div>
+
+				<div>
+					{% for item in sidebar['comments'] %}
+						<div class="flex flex-row justify-start items-center gap-x-2 w-full py-4 px-6 hover:bg-gray-200 hover:cursor-pointer">
+							<div>
+								<img class="w-16 h-16 object-cover rounded-md" src="./public/img/users/{{ item['profile_picture'] }}" alt="Photo de profil de : {{ item['username'] }}" />
+							</div>
+
+							<div>
+								<p>
+									<a href="{{ item['post_id'] }}#comments-section">{{ item['content'] }}</a>
+								</p>
+							</div>
+						</div>
+					{% else %}
+						<div>
+							<p>
+								Il n'y a pas encore de commentaires
+							</p>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+			<div>
+				<div class="w-full border-b-teal-600 border-b-2 border-b-solid py-4 px-6">
+					<p class="text-center text-lg font-semibold">
+						Dernières annonces
+					</p>
+				</div>
+
+				<div>
+					{% for item in sidebar['announces'] %}
+						<div class="flex flex-row justify-start items-center gap-x-2 w-full py-4 px-6 hover:bg-gray-200 hover:cursor-pointer">
+							<p>
+								<a href="{{ item['announce_id'] }}">{{ item['title'] }}</a>
+							</p>
+						</div>
+					{% else %}
+						<div>
+							<p>
+								Il n'y a pas encore d'annonces
+							</p>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</aside>
+	</main>
+	
+	<footer>
+		<div id="footer" class="bg-zinc-700 text-gray-200 p-6">
+			<div class="flex flex-col gap-y-6 sm:grid sm:grid-cols-3 sm:grid-rows-1 sm:gap-10 w-4/5 m-auto">
+				<div>
+					<img src="./public/img/misc/logo_footer.png" alt="Le logo du site !" class="w-3/4 h-36 object-cover block" />
+					<p>
+						Bienvenue sur mon site, ce site a pour but de me présenter et de vous partager quelques conseils dans des sujets divers et variés ! 
+					</p>
+				</div>
+				<div>
+					<h3 class="font-semibold text-xl">Navigation</h3>
+					<ul>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./about">À propos de moi</a></span>
+						</li>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./home">Espace membre</a></span>
+						</li>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./announces">Annonces</a></span>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<h3 class="font-semibold text-xl">Ressources</h3>
+					<ul>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./terms">Conditions Générales d'Utilisation (CGU)</a></span>
+						</li>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./gdpr">Mentions légales et RGPD</a></span>
+						</li>
+						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./contact">Me contacter</a></span>
+						</li>
+					</ul>
+				</div>
+				<div></div>
+			</div>
+		</div>
+		<div class="flex flex-row justify-between items-center bg-zinc-900 w-full px-8 py-4 text-gray-200 text-lg">
+			<p>
+				&copy; 2023
+			</p>
+
+			<p>
+				Kévin BENTO
+			</p>
+		</div>
+	</footer>
+
+	<script src="./public/js/toggler.js"></script>
+
+	<script>
+		const toggleNavbar = e => {
+			let content = document.querySelector('#mobile-menu-2');
+
+			if (content.style.display === 'block') {
+				content.style.display = 'none';
+			} else {
+				content.style.display = 'block';
+			}
+		}
+	</script>
+
+	{% block js %}
+	{% endblock js %}
+</body>
+</html>

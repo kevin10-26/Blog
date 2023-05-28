@@ -1,0 +1,7 @@
+DirectoryIndex ./public/index.php
+
+RewriteEngine on
+RewriteRule ^index$ ?action=index
+RewriteRule ^about$  ?action=about [L]
+
+# XHR calls
