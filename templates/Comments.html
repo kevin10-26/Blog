@@ -1,0 +1,164 @@
+<div id="comments-section" class="w-4/5 mx-auto mb-6 dark:text-gray-300">
+	<h2 class="text-2xl font-semibold text-stone-700">Commentaires</h2>
+
+	{% if session == true %}
+
+		<div class="mb-10">
+			<form name="commentsend" method="POST" action="?action=comments&amp;send" enctype="multipart/form-data">
+				<div class="flex items-start">
+					<textarea name="comment-content" id="comment-content" class="w-3/4 pl-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 text-lg placeholder:text-lg focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event)" onkeyup=""></textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click');"><i class="fa-solid fa-paper-plane text-xl hover:cursor-pointer"></i></label>
+				</div>
+			</form>
+		</div>
+
+	{% else %}
+
+		<div class="mb-10">
+			<p>
+				Vous devez être connecté pour poster un commentaire.
+			</p>
+		</div>
+
+	{% endif %}
+
+	<div id="comments-list" class="w-3/4">
+		{% for comment in comments %}
+			{{ comment['content'] }}
+		{% endfor %}
+		<?php
+		for ($i = 0; $i < count($comments); $i++) {
+			$answersOfComment = $commentsModel->getAnswersByComment($comments[$i]['id']);
+		?>
+
+			<div id="comment<?= $comments[$i]['id'] ?>" class="flex flex-row justify-left items-start gap-x-4 mb-8 px-4 py-2 rounded-sm" >
+				<div>
+					<div>
+						<img class="w-16 h-16 rounded-full" src="./public/img/users/<?= $comments[$i]['author_pp'] ?>" alt="Photo de profil de <?= $comments[$i]['author_name'] ?>" />
+					</div>
+					<div class="text-center text-xl font-semibold">
+						<span><?= $comments[$i]['author_name'] ?></span>
+					</div>
+				</div>
+
+				<div class="p-4">
+					<p class="text-[1.1em]">
+
+						<?php
+						preg_match('#^@\w(\.*)\w*#i', $comments[$i]['content'], $match);
+						// var_dump(substr($match[0], 1, -1), $comments[$i]['author_name']);
+						if (preg_match('#^@\w(\.*)\w*#i', $comments[$i]['content'], $match)) {
+							$iddLength = strlen($match[0]);
+
+							$link = '<a href="?action=membership&view='.substr($match[0], 1).'" class="hover:underline" style="cursor: pointer; color: #3366BB;">'.substr($match[0], 0).'</a> ';
+							$tmp = substr($comments[$i]['content'], $iddLength);
+							
+							$commentContent = $link.$tmp;
+							echo $commentContent;
+						} else {
+							echo $comments[$i]['content'];
+						}
+						?>
+					</p>
+
+					<div class="mb-2 text-xs italic text-gray-500">
+						<div>
+							<?php
+							if (isset($_SESSION['user_session']) && $_SESSION['user_session'] > 0) {
+							?>
+
+							<span class="hover:cursor-pointer hover:underline" onclick="toggleAnswerEditor(event, '<?= $comments[$i]['id'] ?>')">
+								Répondre
+							</span>
+
+							<?php
+							}
+
+							if (isset($_SESSION['user_session']) && $_SESSION['user_session'] == $comments[$i]['author_id']) {
+							?>
+
+							&nbsp;&nbsp;
+							<a class="hover:cursor-pointer hover:underline">
+								Supprimer
+							</a>
+
+							<?php
+							}
+							?>
+
+						</div>
+
+
+						<div id="answer-content-<?= $comments[$i]['id'] ?>" class="hidden">
+							<textarea name="comment-content" class="w-3/4 pl-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event, null, '<?= $comments[$i]['id'] ?>')" onkeyup="">@<?= $comments[$i]['author_name'] ?> </textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click', '<?= $comments[$i]['id'] ?>');"><i class="fa-solid fa-paper-plane text-xl hover:cursor-pointer"></i></label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<?php
+		// ANSWER PART
+
+		if (count($answersOfComment) > 0) {
+			for ($j = 0; $j < count($answersOfComment); $j++) {
+
+		?>
+
+			<div id="comment<?= $answersOfComment[$j]['id'] ?>" class="flex flex-row justify-left items-start gap-x-4 mb-4 px-4 py-2 rounded-sm ml-10" >
+				<div>
+					<div>
+						<img class="block m-auto w-10 h-10 rounded-full" src="./public/img/users/<?= $answersOfComment[$j]['author_pp'] ?>" alt="Photo de profil de <?= $answersOfComment[$j]['author_name'] ?>" />
+					</div>
+					<div class="text-center font-semibold">
+						<span><?= $answersOfComment[$j]['author_name'] ?></span>
+					</div>
+				</div>
+
+				<div class="p-4">
+					<p>
+
+						<?php
+						preg_match('#^@\w(\.*)\w*#i', $answersOfComment[$j]['content'], $answerMatch);
+						// var_dump(substr($match[0], 1, -1), $comments[$i]['author_name']);
+						if (preg_match('#^@\w(\.*)\w*#i', $answersOfComment[$j]['content'], $answerMatch)) {
+							$iddAnswerLength = strlen($answerMatch[0]);
+
+							$answerLink = '<a href="?action=membership&view='.substr($answerMatch[0], 1).'" class="hover:underline" style="cursor: pointer; color: #3366BB;">'.substr($answerMatch[0], 0).'</a> ';
+							$answerTmp = substr($answersOfComment[$j]['content'], $iddAnswerLength);
+							
+							$answerContent = $answerLink.$answerTmp;
+							echo $answerContent;
+						} else {
+							echo $answersOfComment[$j]['content'];
+						}
+						?>
+					</p>
+
+					<div class="mb-2 text-xs italic text-gray-500">
+						<div>
+							<span class="hover:cursor-pointer hover:underline" onclick="toggleAnswerEditor(event, '<?= $answersOfComment[$j]['id'] ?>')">
+								Répondre
+							</span>
+
+							&nbsp;&nbsp;
+							<a class="hover:cursor-pointer hover:underline">
+								Supprimer
+							</a>
+						</div>
+
+
+						<div id="answer-content-<?= $answersOfComment[$j]['id'] ?>" class="hidden">
+							<textarea name="comment-content" class="w-3/4 pl-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event, null, '<?= $comments[$i]['id'] ?>')" onkeyup="">@<?= $answersOfComment[$j]['author_name'] ?> </textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click', '<?= $comments[$i]['id'] ?>');"><i class="fa-solid fa-paper-plane text-xl hover:cursor-pointer"></i></label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<?php
+				}
+			}
+		}
+		// die();
+
+		?>
+	</div>
+</div>

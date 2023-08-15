@@ -1,0 +1,449 @@
+{% extends 'Layout.html' %}
+{% block content %}
+	<article class="m-6 text-stone-800">
+
+		<header>
+			<h1 class="font-semibold text-5xl">{{ post['title'] }}</h1>
+
+			<p class="my-4">
+				{{ post['description'] }}
+			</p>
+
+			<div>
+				<span class="align-top font-semibold underline">Contributeurs :</span>
+
+				<div class="inline-block">
+					<img class="w-16 h-16 object-cover inline rounded-full mx-4" src="./public/img/blog/thumbnails/test1.jpg" alt="">
+					<img class="w-16 h-16 object-cover inline rounded-full mx-4" src="./public/img/blog/thumbnails/test1.jpg" alt="">
+				</div>
+			</div>
+
+			<p class="my-4 text-sm italic font-semibold text-stone-500">
+				Publié le {{ post['dt_upload'] }}. {{ (post['dt_update'] is not empty) ? 'Actualisé le ' ~ post['dt_update'] : '' }}
+			</p>
+
+			<div class="w-fit font-semibold px-4 py-2 border-teal-600 border-solid border-2 hover:cursor-pointer hover:bg-teal-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
+				Sauvegarder cette publication&nbsp;&nbsp;<i class="fa-regular fa-bookmark"></i>
+			</div>
+		</header>
+
+		<section class="my-8">
+			<article class="w-full">
+				<img class="block m-auto w-full object-cover h-96" src="./public/img/blog/thumbnails/{{ post['thumbnail'] }}" alt="Miniature de la publication : {{ post['title'] }}" />
+			</article>
+
+			<article class="my-6">
+				<div>
+					{{ post['content'] }}
+				</div>
+			</article>
+
+			<article>
+				<h2 class="text-2xl font-semibold mb-4 text-stone-700">Partager cette publication</h2>
+
+				<div class="flex flex-row justify-start items-center text-4xl gap-x-6">
+
+					<a href=""><i class="fa-brands fa-facebook-square text-blue-600"></i></a>
+					<a href=""><i class="fa-brands fa-twitter-square text-blue-400"></i></a>
+					<a href=""><i class="fa-brands fa-linkedin text-blue-700"></i></a>
+					<a href=""><i class="fa-solid fa-link text-stone-500"></i></a>
+				</div>
+			</article>
+		</section>
+
+		<section>
+			<h2 class="text-2xl font-semibold text-stone-700">Ces publications pourraient vous intéresser...</h2>
+
+			<div class="grid grid-cols-4 grid-rows-1 gap-x-6">
+				{% for post in ofDomain %}
+					<div class="my-8" onclick="window.location.href = './blog/post/{{ post['id'] }}'">
+						<div class="w-full h-32 my-2">
+							<img class="w-full h-full object-cover" src="./public/img/blog/thumbnails/{{ post['thumbnail'] }}" alt="Miniature de la publication : {{ post['title'] }}." />
+						</div>
+
+						<div>
+							<p class="my-2 text-xl text-stone-800 font-semibold dark:text-gray-400">
+								{{ post['title'] }}
+							</p>
+
+							<p class="my-2 text-justify text-stone-700 dark:text-gray-300">
+								{{ post['description'] }}
+							</p>
+
+							<div class="flex flex-row justify-between text-gray-600 items-center gap-x-8 mt-4 pb-6 text-sm dark:text-gray-400">
+								<p>
+									<i class="fa-solid fa-clock"></i>&nbsp;&nbsp;{{ post['dt_upload'] }}
+								</p>
+
+								<p>
+									<i class="fa-solid fa-eye"></i>&nbsp;&nbsp;{{ (post['views'] > 0) ? post['views'] : 0 }}
+								</p>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</section>
+
+		<footer id="commentSection">
+			<div id="comment-writer">
+				<div class="mb-10">
+					<form name="commentsend" method="POST" action="?action=comments&amp;send" enctype="multipart/form-data">
+						<div class="flex items-start">
+							<textarea name="comment-content" id="comment-content" class="w-3/4 p-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 text-lg placeholder:text-lg focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event)" onkeyup=""></textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click');"><i class="fa-solid fa-paper-plane text-xl hover:cursor-pointer"></i></label>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div id="commentContainer"></div>
+		</footer>
+	</article>
+{% endblock content %}
+
+{% block js %}
+	{# Fetch API chosen instead of XHR. Faster and fits more to the ctxt #}
+	<script>
+
+		/*var conn = new WebSocket('ws://127.0.0.1:443/kevin1026/blog/async/getRelatedPosts');
+		// conn.send('test');
+
+		conn.onopen = function(e) {
+		    console.log("Connection established!");
+		};
+
+		conn.onmessage = function(e) {
+		    console.log(e.data);
+		};
+
+		conn.onclose = function(e) {
+			conn.close('closed', e);
+		}
+
+		conn.onerror = function(e) {
+			console.log('error', e, e.eventPhase);
+			conn.close();
+		}
+	
+		console.log(conn);	*/
+		let socket = new WebSocket("ws://localhost:8080/");
+
+		socket.onopen = function(e) {
+		  alert("[open] Connection established");
+		  alert("Sending to server");
+		  socket.send(['test', 'test234']);
+		};
+
+		socket.onmessage = function(event) {
+		  alert(`[message] Data received from server: ${event.data}`);
+
+		  displayComments.call(this, event.data);
+		};
+
+		socket.onclose = function(event) {
+		  if (event.wasClean) {
+		    alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+		  } else {
+		    // e.g. server process killed or network down
+		    // event.code is usually 1006 in this case
+		    alert('[close] Connection died');
+		  }
+		};
+
+		socket.onerror = function(error) {
+		  alert('Erreur fatale. Veuillez contacter le Webmaster.');
+		  console.log('Erreur fatale. Veuillez contacter le Webmaster.')
+		};
+
+		/*window.onload = function(e) {
+			fetch('/kevin1026/blog/async/getRelatedPosts', {
+				method: 'POST',
+				headers: {
+					"Content-Type": 'application/x-www-form-urlencoded'
+				},
+				body: 'postId={{ post["id"] }}',
+				redirect: 'follow',
+				referrerPolicy: 'no-referrer',
+				})
+				.then(function(res) {
+					return res.json();
+				})
+				.then(function(content) {
+					displayComments.call(this, content);
+				});
+		}*/
+
+		const displayComments = data => {
+			let container = document.getElementById('commentContainer');
+			let commentSection = document.getElementById('commentSection');
+
+			var sortComments = {
+				comments: [],
+				answers: []
+			};
+
+			for (let i = 0; i < data.length; i++)
+			{
+				if (data[i]['is_answer'] == 0) {
+					console.log('icomment: ', i, data[i]);
+					sortComments.comments.push(data[i]);
+					// Object.assign(sortComments['comments'], data[i]);
+
+				} else if(data[i]['is_answer'] == 1) {
+
+					console.log('ianswer: ', i, data[i]);
+					sortComments.answers.push(data[i]);
+				}
+			}
+
+			console.log(sortComments, sortComments.comments.length);
+
+			for (let i = 0; i < sortComments.comments.length; i++)
+			{
+
+				if (i === 0) {
+					createCommentElement.call(this, sortComments.comments[i]);
+				} else {
+					console.log('here else', sortComments.comments[i]['id'], i);
+					// commentSection.appendChild(container.cloneNode(true));
+					createCommentElement.call(this, sortComments.comments[i]);
+				}
+			}
+
+
+
+			for (let i = 0; i < sortComments.answers.length; i++)
+			{
+				console.log(sortComments.answers);
+				if (i === 0) {
+					createCommentElement.call(this, sortComments.answers[i]);
+				} else {
+					console.log('here else answer', i, sortComments.answers[i]);
+					// commentSection.appendChild(container.cloneNode(true));
+					createCommentElement.call(this, sortComments.answers[i]);
+				}
+			}
+		}
+
+		async function createCommentElement (data) {
+			var commentEl = document.createElement('div');
+			commentEl.classList.add('comment-container');
+
+			console.log('checktest', data);
+
+
+			commentEl.id = 'comment-' + data['id'];
+
+			if (data['is_answer'] == 1) {
+				console.log('ref', document.getElementById('comment-' + data['comment_referer_id']));
+				commentEl.style.marginLeft = '4rem';
+				document.getElementById('comment-' + data['comment_referer_id']).insertAdjacentElement('afterend', commentEl);
+			} else {
+				document.getElementById('commentContainer').appendChild(commentEl);
+			}
+
+			var authorInfo = document.createElement('div');
+			commentEl.appendChild(authorInfo);
+
+			var authorPP = document.createElement('img');
+			authorPP.src = './public/img/users/' + data['author_id'];
+			authorPP.alt = 'Photo de profil de ' + data['author_name'];
+			authorPP.classList.add('comment-author-picture');
+			authorInfo.appendChild(authorPP);
+
+			var authorName = document.createElement('p');
+			authorName.textContent = data['author_name'];
+			authorName.style.fontWeight = '600';
+			authorName.style.textAlign = 'center';
+			authorName.style.fontSize = '1.3em';
+			authorInfo.appendChild(authorName);
+
+			var commentMain = document.createElement('div');
+			commentMain.style.padding = '1rem';
+			commentEl.appendChild(commentMain);
+
+			var content = document.createElement('p');
+			commentMain.appendChild(content);
+
+			{% if session == true %}
+				var commentOptions = document.createElement('div');
+				commentOptions.classList.add('comment-options');
+				commentMain.appendChild(commentOptions);
+
+				var answer = document.createElement('span');
+				answer.classList.add('answer-btn');
+				answer.textContent = 'Répondre';
+				commentOptions.appendChild(answer);
+
+				// Now check if the logged user is the comment's author, if he can delete or not the comment.
+
+				var isAuthor = await checkAuthor(data['author_id']);
+
+				var isAuthorArray = Object.values(isAuthor);
+
+				console.log('RIGHT HERE', isAuthorArray[0]);
+
+				if (isAuthorArray[0]) {
+					console.log('hereeeeeeeeeeeeeeeee');
+					var deleteComment = document.createElement('span');
+					deleteComment.classList.add('delete-btn');
+					deleteComment.textContent = 'Supprimer';
+					commentOptions.appendChild(deleteComment);
+				}
+			{% endif %}
+
+			// regex to highlight an idd author ('@{username}')
+			let idd = data['content'].match(/(@[^\s]+)/gm);
+
+			if (idd !== null)
+			{
+				var iddsData = {};
+
+				for (let i = 0; i< idd.length; i++)
+				{
+					console.log('TEST ', content, idd, iddsData);
+
+					/**
+					 * Try to make an array with prev, idd and next els
+					 * 0 =>
+					 * 		prev : ----- (only used when a user is not identified from the beginning of the comment)
+					 * 		idd : @test1
+					 * 		next : -----
+					 * And so on...
+					 * Done. Next : create comment HTML body. Iterate through the object and create the different part, and mix them up (<span>prev</span><a>idd</a><span>next</span>)
+					*/
+
+					console.log(data['content']);
+
+					// If it's the first idd (i === 0), substr from the start (0) to the index of the first char of first idd
+					// Else, add nothing, as the 'next' var will add it automatically
+
+					var prev = (i === 0) ? data['content'].substr(0, data['content'].indexOf(idd[i])) : '';
+
+					console.log(prev);
+
+					// Here, we first get the end of the line (what's left after the idd, which will be reduced after each idd, so.) -> Substr from the end of idd (start -> .indexOf. End -> .length)
+
+					// Then, we get the char pos of the first letter of the next idd (i + 1)
+
+					// Finally, we cut the line between end of current idd (endOfLine var) until the first char of next idd (substr from the start of firstLine, until pos of nextIdd, so)
+
+					let endOfLine = data['content'].substr(data['content'].indexOf(idd[i]) + idd[i].length);
+					let nextIdd = endOfLine.indexOf(idd[i + 1]);
+					let next = endOfLine.substr(0, nextIdd);
+
+					console.log('END NEXT : ', endOfLine, nextIdd, next);
+
+					// Create an iterable object, and assign it to the global one (iddsData)
+
+					let iddInfo = {
+						[i] : {
+							prev: prev,
+							idd: idd[i],
+							next: next
+						}
+					};
+
+					console.log('PREV : ' + prev, 'NEXT : ', next, iddInfo, iddsData);
+
+					Object.assign(iddsData, iddInfo);
+				}
+
+
+				console.log('here', iddsData);
+
+				for (const idd in iddsData)
+				{
+					let prevSpan = document.createElement('span');
+					prevSpan.textContent = iddsData[idd]['prev'];
+					content.appendChild(prevSpan);
+
+					let iddEl = document.createElement('a');
+					iddEl.href = './users/view/' + iddsData[idd]['idd'];
+					iddEl.textContent = iddsData[idd]['idd'];
+					iddEl.classList.add('idd-link');
+					content.appendChild(iddEl);
+
+					let nextSpan = document.createElement('span');
+					nextSpan.textContent = iddsData[idd]['next'];
+					content.appendChild(nextSpan);
+
+				}
+			} else {
+				let commentContent = document.createElement('span');
+				commentContent.textContent = data['content'];
+				content.appendChild(commentContent);
+			}
+		}
+
+		async function checkAuthor (authorId) {
+			const response = await fetch('./checks/checkUser/', {
+				method: 'POST',
+				headers: {
+					"Content-Type": 'application/x-www-form-urlencoded'
+				},
+				body: 'authorId=' + authorId,
+				redirect: 'follow',
+				referrerPolicy: 'no-referrer',
+			});
+
+			const res = await response.json();
+			console.log(res);
+
+			return res;
+		}
+	</script>
+{% endblock js %}
+
+{% block css %}
+	<style>
+		.comment-container {
+			display: flex;
+			flex-flow: row no-wrap;
+			justify-content: left;
+			align-items: flex-start;
+
+			gap: auto 0.625rem;
+
+			margin-bottom: 1rem;
+
+			padding: 0.625rem 1rem;
+		}
+
+		.comment-author-picture {
+			width: 4rem;
+			height: 4rem;
+			border-radius: 100%;
+			object-fit: cover;
+		}
+
+		.idd-link {
+			color: #4338CA;
+		}
+
+		.idd-link:visited {
+			color: #115E59;
+		}
+
+		.idd-link:hover {
+			text-decoration: underline;
+		}
+
+		.comment-options {
+			display: flex;
+			flex-direction: row;
+			justify-content: left;
+
+			gap: 2rem;
+
+			margin: 0.5rem 0;
+			font-size: 0.9em;
+			font-style: italic;
+			color: #6B7280;
+		}
+
+		.answer-btn:hover, .delete-btn:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	</style>
+{% endblock css %}

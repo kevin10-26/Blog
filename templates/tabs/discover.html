@@ -1,0 +1,35 @@
+<div class="sm:grid grid-cols-2 grid-rows-2 gap-4 px-4 text-justify">
+	<div>
+		<h3 class="text-stone-800 dark:text-gray-300 text-2xl font-semibold underline mb-6">Description</h3>
+		<p>
+			Salut ! Je m'appelle Kévin BENTO et je suis étudiant en 2e année d'une licence de droit à l'URCA de Reims. Je suis développeur web depuis le printemps 2020 (merci Covid ^^). Ce site m'aide à partager mes connaissances et mes aventures à quiconque s'y intéresse en explorant ce site web !
+		</p>
+	</div>
+
+	<div class="sm:row-span-2">
+		<h3 class="text-stone-800 dark:text-gray-300 text-2xl font-semibold underline mb-6">Hobbies</h3>
+
+		<div class="flex flex-col justify-center items-center gap-y-4 w-2/3 m-auto">
+
+			{% for item in tabData['discover']['hobbies'] %}
+				<div class="flex flex-row justify-start items-center gap-x-4 rounded-md border-2 border-solid border-stone-700 dark:border-stone-400 px-6 py-2 w-full">
+					<img class="block w-16 h-16 object-cover rounded-sm" src="/kevin1026/public/img/misc/about/hobbies/{{ item['img'] }}" alt="{{ item['name'] }}" />
+					<p>{{ item['name'] }}</p>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div>
+		<h3 class="text-stone-800 dark:text-gray-300 text-2xl font-semibold underline mb-6">Réseaux sociaux</h3>
+
+		<div class="flex flex-row gap-x-8 ml-4">
+
+			{% for item in tabData['discover']['networks'] %}
+				<div>
+					<i class="text-4xl text-sky-400 {{ item }}"></i>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>

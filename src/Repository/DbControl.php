@@ -43,6 +43,8 @@ class DbControl {
 			}
 		}
 
+		// die(var_dump($query));
+
 		$query->execute();
 
 		$results = [];

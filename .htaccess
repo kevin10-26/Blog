@@ -1,7 +1,16 @@
 DirectoryIndex ./public/index.php
 
 RewriteEngine on
-RewriteRule ^index$ ?action=index
-RewriteRule ^about$  ?action=about [L]
+RewriteRule ^index/$ ?action=index
+
+RewriteCond %{QUERY_STRING} ^xhr=([^&]*)$
+RewriteRule (.*/)$ $1?xhr=%1
+
+RewriteRule ^about/$  ?action=about
+RewriteRule ^blog/$ ?action=blog 
+RewriteRule ^blog/search/([^/]*) ?action=blog&mode=search&d=$1
+RewriteRule ^blog/post/([^/]*) ?action=blog&mode=viewPost&id=$1
+RewriteRule ^blog/async/getRelatedPosts ?action=blog&mode=async&getRelatedPosts
+RewriteRule ^checks/checkUser/ ?action=checks&mode=checkUser [L]
 
 # XHR calls

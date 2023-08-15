@@ -2,10 +2,12 @@
 <html lang="fr">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<base href="/kevin1026/" />
 
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="./public/dist/output.css" />
+
 	<title>{{title}}</title>
 
 	<style type="text/css">
@@ -14,14 +16,17 @@
 		}
 	</style>
 
+	{% block css %}
+	{% endblock css %}
+
 	<script src="./public/js/theme.js"></script>
 </head>
-<body class="dark:bg-slate-700">
+<body class="dark:bg-slate-700 bg-stone-100">
 
 	<header class="sticky top-0 z-[2]">
 	    <nav class="bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
 	        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-	            <a href="./index" class="flex items-center">
+	            <a href="./index/" class="flex items-center">
 	                <img src="./public/img/misc/logo_transparent.png" class="mr-3 h-6 sm:h-9" alt="Website Logo" />
 	                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Kévin1026</span>
 	            </a>
@@ -90,7 +95,7 @@
 
 							<div>
 								<p>
-									<a href="{{ item['post_id'] }}#comments-section">{{ item['content'] }}</a>
+									<a href="/kevin1026/blog/article-{{ item['post_id'] }}#comments-section">{{ item['content'] }}</a>
 								</p>
 							</div>
 						</div>
@@ -143,13 +148,13 @@
 					<h3 class="font-semibold text-xl">Navigation</h3>
 					<ul>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./about">À propos de moi</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/about/">À propos de moi</a></span>
 						</li>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./home">Espace membre</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/home/">Espace membre</a></span>
 						</li>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./announces">Annonces</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/announces/">Annonces</a></span>
 						</li>
 					</ul>
 				</div>
@@ -157,13 +162,13 @@
 					<h3 class="font-semibold text-xl">Ressources</h3>
 					<ul>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./terms">Conditions Générales d'Utilisation (CGU)</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/terms/">Conditions Générales d'Utilisation (CGU)</a></span>
 						</li>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./gdpr">Mentions légales et RGPD</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/gdpr/">Mentions légales et RGPD</a></span>
 						</li>
 						<li class="m-[20px_auto] origin-left transition-all duration-300 hover:translate-x-[10px] hover:font-semibold hover:cursor-pointer">
-							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="./contact">Me contacter</a></span>
+							<span><i class="fa-solid fa-angle-double-right"></i>&nbsp;&nbsp;<a href="/kevin1026/contact/">Me contacter</a></span>
 						</li>
 					</ul>
 				</div>

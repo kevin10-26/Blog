@@ -8,10 +8,10 @@ class ArrayMenuReader implements MenuReader
 	{
 		return [
 			['href' => '/kevin1026/', 'text' => 'Accueil'],
-			['href' => '/kevin1026/about', 'text' => 'À propos de moi'],
-			['href' => '/kevin1026/blog', 'text' => 'Publications'],
-			['href' => '/kevin1026/announces', 'text' => 'Annonces'],
-			['href' => '/kevin1026/contact', 'text' => 'Contact'],
+			['href' => '/kevin1026/about/', 'text' => 'À propos de moi'],
+			['href' => '/kevin1026/blog/', 'text' => 'Publications'],
+			['href' => '/kevin1026/announces/', 'text' => 'Annonces'],
+			['href' => '/kevin1026/contact/', 'text' => 'Contact'],
 
 		];
 	}

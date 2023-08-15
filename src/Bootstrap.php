@@ -26,6 +26,7 @@ $response = $injector->make('Http\HttpResponse');
 
 $routeDefinitionCallback = function(\FastRoute\RouteCollector $r) {
 	$routes = include('Routes.php');
+
 	foreach ($routes as $route) {
 		$r->addRoute($route[0], $route[1], $route[2]);
 	}
@@ -49,7 +50,6 @@ switch ($routeInfo[0]) {
 		$className = $routeInfo[1][0];
 		$method = $routeInfo[1][1];
 		$vars = $routeInfo[2];
-
 		
 		$class = $injector->make($className);
 		$class->$method($vars);
