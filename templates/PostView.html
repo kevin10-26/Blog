@@ -3,14 +3,14 @@
 	<article class="m-6 text-stone-800">
 
 		<header>
-			<h1 class="font-semibold text-5xl">{{ post['title'] }}</h1>
+			<h1 class="font-semibold text-5xl dark:text-gray-300">{{ post['title'] }}</h1>
 
-			<p class="my-4">
+			<p class="my-4 dark:text-gray-200">
 				{{ post['description'] }}
 			</p>
 
 			<div>
-				<span class="align-top font-semibold underline">Contributeurs :</span>
+				<span class="align-top font-semibold underline dark:text-gray-300">Contributeurs :</span>
 
 				<div class="inline-block">
 					<img class="w-16 h-16 object-cover inline rounded-full mx-4" src="./public/img/blog/thumbnails/test1.jpg" alt="">
@@ -18,28 +18,28 @@
 				</div>
 			</div>
 
-			<p class="my-4 text-sm italic font-semibold text-stone-500">
+			<p class="my-4 text-sm italic font-semibold text-stone-500 dark:text-gray-400">
 				Publié le {{ post['dt_upload'] }}. {{ (post['dt_update'] is not empty) ? 'Actualisé le ' ~ post['dt_update'] : '' }}
 			</p>
 
-			<div class="w-fit font-semibold px-4 py-2 border-teal-600 border-solid border-2 hover:cursor-pointer hover:bg-teal-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
+			<div class="w-fit font-semibold px-4 py-2 border-teal-600 border-solid border-2 dark:text-gray-200 hover:cursor-pointer hover:bg-teal-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
 				Sauvegarder cette publication&nbsp;&nbsp;<i class="fa-regular fa-bookmark"></i>
 			</div>
 		</header>
 
 		<section class="my-8">
 			<article class="w-full">
-				<img class="block m-auto w-full object-cover h-96" src="./public/img/blog/thumbnails/{{ post['thumbnail'] }}" alt="Miniature de la publication : {{ post['title'] }}" />
+				<img class="block m-auto w-full object-cover sm:h-96 h-44" src="./public/img/blog/thumbnails/{{ post['thumbnail'] }}" alt="Miniature de la publication : {{ post['title'] }}" />
 			</article>
 
-			<article class="my-6">
+			<article class="my-6 dark:text-gray-200">
 				<div>
 					{{ post['content'] }}
 				</div>
 			</article>
 
 			<article>
-				<h2 class="text-2xl font-semibold mb-4 text-stone-700">Partager cette publication</h2>
+				<h2 class="text-2xl font-semibold mb-4 text-stone-700 dark:text-gray-300">Partager cette publication</h2>
 
 				<div class="flex flex-row justify-start items-center text-4xl gap-x-6">
 
@@ -52,11 +52,11 @@
 		</section>
 
 		<section>
-			<h2 class="text-2xl font-semibold text-stone-700">Ces publications pourraient vous intéresser...</h2>
+			<h2 class="text-2xl font-semibold text-stone-700 dark:text-gray-300">Ces publications pourraient vous intéresser...</h2>
 
-			<div class="grid grid-cols-4 grid-rows-1 gap-x-6">
+			<div class="sm:grid grid-cols-4 grid-rows-1 sm:gap-x-6 flex flex-col justify-center items-center">
 				{% for post in ofDomain %}
-					<div class="my-8" onclick="window.location.href = './blog/post/{{ post['id'] }}'">
+					<div class="sm:my-8 my-4" onclick="window.location.href = './blog/post/{{ post['id'] }}'">
 						<div class="w-full h-32 my-2">
 							<img class="w-full h-full object-cover" src="./public/img/blog/thumbnails/{{ post['thumbnail'] }}" alt="Miniature de la publication : {{ post['title'] }}." />
 						</div>
@@ -90,7 +90,7 @@
 				<div class="mb-10">
 					<form name="commentsend" method="POST" action="?action=comments&amp;send" enctype="multipart/form-data">
 						<div class="flex items-start">
-							<textarea name="comment-content" id="comment-content" class="w-3/4 p-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 text-lg placeholder:text-lg focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event)" onkeyup=""></textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click');"><i class="fa-solid fa-paper-plane text-xl hover:cursor-pointer"></i></label>
+							<textarea name="comment-content" id="comment-content" class="w-3/4 p-2 bg-transparent outline-none border-l-zinc-500 border-l-solid border-l-4 text-lg placeholder:text-lg focus:border-b-blue-700 focus:border-b-solid focus:border-b-2 resize-none dark:text-gray-300" rows="1" placeholder="Entrez votre commentaire ici..." onkeydown="sendComment(event)" onkeyup=""></textarea>&nbsp;&nbsp;<label for="comment-content" onclick="sendComment(event, 'click');"><i class="fa-solid fa-paper-plane text-xl dark:text-gray-300 hover:cursor-pointer"></i></label>
 						</div>
 					</form>
 				</div>
@@ -102,57 +102,33 @@
 
 {% block js %}
 	{# Fetch API chosen instead of XHR. Faster and fits more to the ctxt #}
+	<script src="./public/js/autobahn.js"></script>
 	<script>
 
-		/*var conn = new WebSocket('ws://127.0.0.1:443/kevin1026/blog/async/getRelatedPosts');
-		// conn.send('test');
+	var XHR = new XMLHttpRequest();
+	XHR.open('POST', 'http://192.168.243.70/WS/post.php', true);
+	XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	XHR.send('topic=kittensCategory');
 
-		conn.onopen = function(e) {
-		    console.log("Connection established!");
-		};
-
-		conn.onmessage = function(e) {
-		    console.log(e.data);
-		};
-
-		conn.onclose = function(e) {
-			conn.close('closed', e);
+	XHR.onreadystatechange = function(e) {
+		if (this.readyState == 4 && this.status == 200) {
+			console.log(this.response);
 		}
+	}
 
-		conn.onerror = function(e) {
-			console.log('error', e, e.eventPhase);
-			conn.close();
-		}
-	
-		console.log(conn);	*/
-		let socket = new WebSocket("ws://localhost:8080/");
+    var conn = new ab.Session('ws://192.168.243.70:8080',
+        function() {
+            conn.subscribe('test', function(topic, data) {
+                // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
+                console.log('New article published to category "' + topic + '" : ' + data.title);
+            });
+        },
+        function() {
+            console.warn('WebSocket connection closed');
+        },
+        {'skipSubprotocolCheck': true}
+    );
 
-		socket.onopen = function(e) {
-		  alert("[open] Connection established");
-		  alert("Sending to server");
-		  socket.send(['test', 'test234']);
-		};
-
-		socket.onmessage = function(event) {
-		  alert(`[message] Data received from server: ${event.data}`);
-
-		  displayComments.call(this, event.data);
-		};
-
-		socket.onclose = function(event) {
-		  if (event.wasClean) {
-		    alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-		  } else {
-		    // e.g. server process killed or network down
-		    // event.code is usually 1006 in this case
-		    alert('[close] Connection died');
-		  }
-		};
-
-		socket.onerror = function(error) {
-		  alert('Erreur fatale. Veuillez contacter le Webmaster.');
-		  console.log('Erreur fatale. Veuillez contacter le Webmaster.')
-		};
 
 		/*window.onload = function(e) {
 			fetch('/kevin1026/blog/async/getRelatedPosts', {

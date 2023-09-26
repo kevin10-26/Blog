@@ -6,10 +6,10 @@ use \PDO;
 
 class DbControl {
 
-	private $_host = '127.0.0.1';
+	private $_host = 'localhost';
 	private $_dbName = 'blog';
-	private $_username = 'root';
-	private $_passwd = '';
+	private $_username = 'kevin';
+	private $_passwd = 'root';
 	private $_options = array(
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 		PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names = 'fr_FR'",
@@ -20,7 +20,7 @@ class DbControl {
 	{
 		try {
 
-			$pdo = new PDO('mysql:host=' . $this->_host . ';dbname=' . $this->_dbName . ';charset=utf8', $this->_username, $this->_passwd, $this->_options);
+			$pdo = new PDO('mysql:host='. $this->_host .';dbname='. $this->_dbName .';charset=utf8', $this->_username, $this->_passwd, $this->_options);
 
 		} catch (PDOException $e) {
 			throw new PDOException('Connexion impossible à la base de données');

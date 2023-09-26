@@ -7,9 +7,10 @@ RewriteCond %{QUERY_STRING} ^xhr=([^&]*)$
 RewriteRule (.*/)$ $1?xhr=%1
 
 RewriteRule ^about/$  ?action=about
-RewriteRule ^blog/$ ?action=blog 
-RewriteRule ^blog/search/([^/]*) ?action=blog&mode=search&d=$1
-RewriteRule ^blog/post/([^/]*) ?action=blog&mode=viewPost&id=$1
+RewriteRule ^blog/$ ?action=blog
+RewriteRule ^contact/ ?action=contact 
+RewriteRule ^blog/search/([^/]*) ?action=blog&mode=search&d=$1 [B]
+RewriteRule ^blog/post/([^/]*) ?action=blog&mode=viewPost&id=$1 [B]
 RewriteRule ^blog/async/getRelatedPosts ?action=blog&mode=async&getRelatedPosts
 RewriteRule ^checks/checkUser/ ?action=checks&mode=checkUser [L]
 
