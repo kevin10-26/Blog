@@ -7,11 +7,31 @@ RewriteCond %{QUERY_STRING} ^xhr=([^&]*)$
 RewriteRule (.*/)$ $1?xhr=%1
 
 RewriteRule ^about/$  ?action=about
+
 RewriteRule ^blog/$ ?action=blog
-RewriteRule ^contact/ ?action=contact 
+
+RewriteRule ^contact/ ?action=contact
+RewriteRule ^contact/sendMsg ?action=contact&sendMsg [B] 
+
+RewriteRule ^announces/ ?action=announces
+RewriteRule ^announces/([^/]*) ?action=announces&view=$1 [B]
+
+RewriteRule ^backoffice/ ?action=backoffice
+RewriteRule ^backoffice/home/ ?action=backoffice&home
+RewriteRule ^xhradmin/ ?action=xhradmin
+RewriteRule ^xhradmin/degrees/submit ?action=about&xhr&submitDegree
+RewriteRule ^xhradmin/degrees/view/ ?action=about&xhr&viewDegree
+RewriteRule ^xhradmin/degrees/edit/ ?action=about&xhr&editDegree
+RewriteRule ^xhradmin/interests/submit/ ?action=about&xhr&submit
+RewriteRule ^xhradmin/interests/view/ ?action=about&xhr&viewInterest
+RewriteRule ^xhradmin/interests/edit/ ?action=about&xhr&editInterest
+RewriteRule ^xhradmin/interests/deletePicture/ ?action=about&xhr&deletePicture
+RewriteRule ^xhradmin/interests/delete/ ?action=about&xhr&deleteInterest
+
 RewriteRule ^blog/search/([^/]*) ?action=blog&mode=search&d=$1 [B]
 RewriteRule ^blog/post/([^/]*) ?action=blog&mode=viewPost&id=$1 [B]
 RewriteRule ^blog/async/getRelatedPosts ?action=blog&mode=async&getRelatedPosts
+
 RewriteRule ^checks/checkUser/ ?action=checks&mode=checkUser [L]
 
 # XHR calls

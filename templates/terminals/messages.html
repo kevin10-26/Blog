@@ -1,0 +1,60 @@
+{% block content %}
+<div>
+	<h2 class="text-3xl mb-6 font-semibold dark:text-teal-300">Gestion des messages</h2>
+
+	<div class="flex flex-col">
+
+		<table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+			<thead class="border-b-2 border-b-gray-200 border-b-solid">
+				<tr>
+					<th class="p-4">Expéditeur</th>
+					<th class="p-4">E-mail</th>
+					<th class="p-4">Sujet</th>
+					<th class="p-4">Date d'envoi</th>
+					<th class="p-4">Répondu ?</th>
+				</tr>
+			</thead>
+
+			<tbody>
+
+				{% for message in data %}
+
+				<tr class="answer transition-all border-b-2 border-b-solid border-b-gray-300 hover:bg-[#115E59]/[0.6] hover:cursor-pointer {{ (message.index % 2 == 0) ? 'bg-gray-200' : 'bg-white' ?>" onclick="openMessage(event, '{{ message['id'] }}')">
+
+					<td class="p-4">
+						{{ message['sender_name'] }}
+					</td>
+
+					<td class="p-4">
+						{{ message['sender_email'] }}
+					</td>
+
+					<td class="p-4">
+						{{ message['topic'] }}
+					</td>
+
+					<td class="p-4">
+						{{ message['dt_sent'] }}
+					</td>
+
+					<td class="p-4">
+						{% if message['answered'] == 1 %}
+							{{ 'Oui' }}
+						{% else %}
+
+						<a class="px-4 py-2 bg-teal-600 text-white rounded-md hover:font-semibold hover:underline" href="mailto:{{ message['sender_email'] }}?subject={{ message['topic'] }}&amp;body=*** De : {{ message['sender_email'] }}%0D%0A{{ message['content'] }}" onclick="markAsAnswered(event, '{{ message['id'] }}')">Répondre ?</a>
+
+						{% endif %}
+					</td>
+
+				</tr>
+
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	<div id="mail-content" class="hidden p-4 bg-gray-200">
+		
+	</div>
+</div>
+{% endblock content %}

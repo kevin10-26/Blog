@@ -15,6 +15,7 @@
         "rdlowrey/auryn": "^1.4",
         "mustache/mustache": "^2.14",
         "twig/twig": "^2.0",
-        "cboden/ratchet": "^0.4.4"
+        "cboden/ratchet": "^0.4.4",
+        "phpmailer/phpmailer": "^6.8"
     }
 }

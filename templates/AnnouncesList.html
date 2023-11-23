@@ -1,0 +1,34 @@
+{% extends 'Layout.html' %}
+{% block content %}
+<article class="m-6 text-stone-800">
+	<div class="flex flex-col justify-center items-center w-full h-48 bg-cover" style="background-image: url('./public/img/misc/index/bg_index.jpg');">
+		<div class="flex flex-col justify-center items-center bg-black/[0.8] text-white w-full sm:w-3/5 h-20 border-white border-solid border-2">
+			<h2 class="font-semibold text-2xl">Liste des annonces</h2>
+		</div>
+	</div>
+
+	<div class="flex flex-col items-center justify-center sm:grid sm:grid-cols-3 gap-4 my-8">
+		{% for announce in announcesList %}
+
+		<div class="p-4 hover:cursor-pointer border-solid border-2 border-gray-300" onclick="window.location.href = './announces/{{ announce['id'] }}';">
+			<div class="py-4 border-b-solid border-b-2 border-b-gray-200">
+				<p class="text-black font-semibold text-lg text-center hover:underline dark:text-slate-300">{{ announce['title'] }}</p>
+			</div>
+
+			<div class="py-4 dark:text-slate-200">
+				<p>
+					{{ announce['description'] }}
+				</p>
+			</div>
+
+			<div>
+				<p class="text-right italic text-gray-400">
+					{{ announce['dt_send'] }}	
+				</p>
+			</div>
+		</div>
+
+		{% endfor %}
+	</div>	
+</article>
+{%endblock content %}

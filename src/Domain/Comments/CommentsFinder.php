@@ -13,7 +13,9 @@ class CommentsFinder extends DbControl {
 		if (!is_null($limit)) {
 			return $db->query('SELECT * FROM posts_comments INNER JOIN users ON posts_comments.author_id = users.id ORDER BY users.id DESC LIMIT 0, '. $limit);
 		} else {
-			return $db->query('SELECT * FROM posts_comments ORDER BY id DESC');
+			$comments = $db->query('SELECT * FROM posts_comments ORDER BY id DESC');
+			$this->assignAuthorInfo($comments);
+			return $comments;
 		}		
 	}
 

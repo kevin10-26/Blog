@@ -1,0 +1,28 @@
+{% block content %}
+<div>
+	<h1 class="text-3xl font-semibold dark:text-teal-300">Gestion des commentaires</h1>
+
+	<div class="flex flex-col justify-center items-center sm:grid sm:grid-cols-2 gap-4 mt-10">
+		{% for comment in data %}
+
+			<div class="flex flex-row justify-around items-center bg-gray-200 py-2 px-4 rounded-md w-full">
+				<div class="flex flex-row justify-start items-center gap-x-2 w-3/4">
+					<div>
+						<img class="w-10 h-10" src="./public/img/users/{{ comment['author_pp'] }}" alt="" />
+					</div>
+					<div>
+						<span>{{ comment['content'] }}</span>
+					</div>
+				</div>
+
+				<div class="w-1/4 flex justify-end">
+					<p>
+						<i class="fa-solid fa-trash text-red-600 hover:cursor-pointer"></i>
+					</p>
+				</div>
+			</div>
+
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,143 @@
+<?php declare(strict_types=1);
+
+namespace Blog\Utilities\Backoffice;
+
+use Blog\Repository\DbControl;
+
+class AdminModel extends DbControl
+{
+	public function get()
+	{
+		return json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/admin_data.json'), true);
+	}
+
+	public function getDegreeData($degree)
+	{
+		return json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/achievements.json'), true)[$degree];
+	}
+
+	public function getInterestData($interest)
+	{
+		return json_decode(file_get_contents('./../src/files/interests.json'), true)[$interest];
+	}
+
+	public function newDegree($data)
+	{
+		$newData = array(
+			'title' => $data['title'],
+			'finished' => $data['finished'],
+			'year' => (!$data['finished']) ? array('start' => $data['year']) : $data['year'],
+			'structure' => $data['structure']
+		);
+		$base = json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/achievements.json'), true);
+		
+		$newData = array_merge($base, array($data['title'] => $newData));
+
+		# var_dump(scandir('./../src/files/'));	
+		file_put_contents('./../src/files/achievements.json', json_encode($newData, JSON_PRETTY_PRINT));
+		return true;
+		
+	}
+
+	public function editDegree($data)
+	{
+		$newData = array(
+			'title' => $data['title'],
+			'finished' => $data['finished'],
+			'year' => (!$data['finished']) ? array('start' => $data['year']) : $data['year'],
+			'structure' => $data['structure']
+		);
+		$base = json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/achievements.json'), true);
+
+		$base[$data['base-title']] = $newData;
+
+		file_put_contents('./../src/files/achievements.json', json_encode($base, JSON_PRETTY_PRINT));
+		return true;
+
+	}
+
+	public function newInterest($data, $pictures)
+	{
+		$pictureNames = array();
+		for ($i = 0; $i < count($pictures['pictures']['name']); $i++)
+		{
+			$pictureNames[$i] = array(
+				'name' => $pictures['pictures']['name'][$i],
+				'alt' => 'Image : ' . $pictures['pictures']['name'][$i]
+			);
+		}
+
+		$newData = array(
+			'title' => $data['title'],
+			'key_title' => $data['key-title'],
+			'achievements' => $data['achievements'],
+			'images' => $pictureNames,
+			'description' => $data['description'],
+			'content' => $data['content']
+		);
+		$base = json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/interests.json'), true);
+		
+		$newData = array_merge($base, array($data['key-title'] => $newData));
+	
+		$this->uploadPicture($pictures, $data['key-title']);
+	
+		file_put_contents('./../src/files/interests.json', json_encode($newData, JSON_PRETTY_PRINT));
+		return true;
+	}
+
+	public function uploadPicture($pictures, $dirTitle)
+	{
+		# Recreating the array, because the http FILES are not in a convenient order.
+		$data = [];
+		foreach ($pictures['pictures'] as $k => $v)
+		{
+			for ($i = 0; $i < count($pictures['pictures'][$k]); $i++) {
+
+				$data[$i][$k] = $pictures['pictures'][$k][$i];
+			}
+		}
+
+		$allowed = array("jpg" => "image/jpg", "jpeg" => "image/jpeg", "gif" => "image/gif", "png" => "image/png", "webp" => "image/webp");
+
+
+		if (!is_dir('./img/misc/about/interests/' . $dirTitle. '/')) {
+			mkdir('./img/misc/about/interests/' . $dirTitle. '/');
+		}
+
+		// die(var_dump($dirTitle));
+
+		for ($i = 0; $i < count($data); $i++) {
+
+		    $filename = $data[$i]["name"];
+		    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+		    $beforeExt = strstr($filename, '.'.$ext, true);
+		    $realfn = "";
+		    $filetype = $data[$i]["type"];
+		    $filesize = $data[$i]["size"];
+
+
+		    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+		    // die(var_dump($ext, $allowed, $filename));
+		    if(!array_key_exists($ext, $allowed)) die("Erreur : Veuillez sélectionner un format de fichier valide.".$beforeExt);
+
+	        
+	        $maxsize = 5 * 1024 * 1024;
+	        if($filesize > $maxsize) die("Error: La taille du fichier est supérieure à la limite autorisée.");
+	        
+	        if(in_array($filetype, $allowed)){
+	            
+	            if(file_exists("public/img/misc/about/interests/" . $dirTitle . '/' . $filename)){
+	            	die("Votre fichier ".$filename." existe déjà :/");
+	            } else {
+
+	            	$realfn = $beforeExt.'.'.$ext;
+	                move_uploaded_file($data[$i]["tmp_name"], "./img/misc/about/interests/" . $dirTitle . '/' . $realfn);
+
+	            } 
+	        } else{
+			throw new \Exception("Error: Il y a eu un problème de téléchargement de votre fichier. Veuillez réessayer.", 91); 
+	        }
+	    }
+	}
+}

@@ -1,0 +1,42 @@
+{% block content %}
+<div>
+	<p class="text-center text-2xl font-semibold">
+		<span>Modifier : {{ title }}</span>
+	</p>
+
+	<form id="interest-form" action="" method="POST" class="grid grid-cols-2 grid-rows-[auto_1fr] mt-6 gap-8" onsubmit="editInterest(event, '{{ key_title }}');">
+		<div>
+			<label for="interest-title" class="underline">Nouveau titre (actuel : {{ title }})</label><br /><input id="interest-title" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez le nouveau titre..." name="title" value="{{ title }}" />
+		</div>
+		<div>
+			<label for="achievements" class="underline">Ajouter une réussite (actuellement : {% for item in achievements %} {{ item ~ ' - ' }} {% endfor %}) - plusieurs : séparer par "-". </label><br /><input id="achievements" class="mt-4 px-4 py-2 rounded-sm" type="text" name="achievements[]" value="{% for item in achievements %} {{ item }} {% endfor %}" />
+		</div>
+		<div>
+			<label for="description" class="underline">Nouvelle description</label><br /><textarea id="description" class="w-4/5 mx-auto mt-4 px-4 py-2 rounded-sm" placeholder="Entrez la nouvelle description..." name="description">{{ description }}</textarea>
+		</div>
+		<div>
+			<label for="content" class="underline">Nouveau contenu</label><br /><textarea id="content" class="w-4/5 mx-auto mt-4 px-4 py-2 rounded-sm" placeholder="Entrez le nouveau contenu..." name="content">{{ content }}</textarea>
+		</div>
+		<div>
+			<label for="interest-pictures" class="underline">Images</label><br /><input id="interest-pictures" class="mt-4 px-4 py-2 rounded-sm" type="file" accept="image/*" name="pictures[]" multiple />
+		</div>
+		
+		<div class="flex flex-row justify-start items-center flex-wrap gap-2">
+			{% if images is not empty %}
+				{% for item in images %}
+					<div id='picture-{{ item['name'] }}' class="flex flex-col justify-center items-center gap-y-2">
+						<img class="w-20 h-20" src="./public/img/misc/about/interests/{{ key_title }}/{{ item['name'] }}" />
+						<i class="fa-solid fa-trash hover:text-red-800 hover:cursor-pointer" onclick="deleteInterestPicture(event, '{{ key_title }}', '{{ item["name"] }}')"></i>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		<div class="col-span-2 flex flex-row justify-between items-center gap-x-4 mt-6">
+			<button type="button" class="block px-4 py-2 rounded-md bg-red-700 text-white hover:cursor-pointer hover:shadow-md hover:shadow-gray-400 hover:bg-transparent hover:text-red-700 hover:font-semibold hover:border-red-700 hover:border-2" onclick="deleteInterest(event, '{{ key_title }}')">Supprimer</button>
+
+			<input type="submit" class="block px-4 py-2 rounded-md bg-teal-700 text-white hover:cursor-pointer hover:shadow-md hover:shadow-gray-400" />
+		</div>
+	</form>
+</div>
+{% endblock content %}

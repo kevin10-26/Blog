@@ -1,0 +1,35 @@
+{
+	"data": {
+		"overview": {
+			"cards": {
+				"number_of_users": 1,
+				"number_of_posts": 6,
+				"new_messages": 4
+			},
+			"networks": {
+				"Facebook": 1350,
+				"Twitter": 1200,
+				"Instagram": 2746,
+				"Linkedin": 956
+			},
+			"recent": {
+				"0":{
+					"icon": "fa-regular fa-comment",
+					"color": "#0284C7",
+					"content": "{Utilisateur 1} a mentionné {Utilisateur 2} dans une nouvelle publication."
+				},
+				"1":{
+					"icon": "fa-regular fa-square-minus",
+					"color": "#DC2626",
+					"content": "La publication {Titre} a été supprimée par {Administrateur}."
+				}
+			}
+		},
+		"settings": {
+			
+		},
+		"posts": {
+			
+		}
+	}
+}

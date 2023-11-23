@@ -1,0 +1,16 @@
+{% extends 'Layout.html' %}
+{% block content %}
+<section class="px-8 py-4 text-stone-800" id="announce">
+	<article class="mt-8">
+
+		<div>
+			<h1 class="text-3xl font-semibold underline text-center mb-6 dark:text-slate-300">{{ announce['title'] }}</h1>
+		</div>
+
+		<div id="viewer" class="mb-6">
+			{{ announce['content'] }}
+		</div>
+
+	</article>
+</section>
+{%endblock content %}

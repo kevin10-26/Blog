@@ -1,0 +1,29 @@
+{% block content %}
+<div class="w-full">
+	<h1 class="text-3xl font-semibold dark:text-teal-300">Gestion des utilisateurs</h1>
+
+	<div class="flex flex-col gap-y-2 items-center justify-center sm:justify-start sm:items-start w-4/5 sm:w-1/2 mt-10">
+
+		{% for user in data %}
+
+			<div class="flex flex-row justify-around items-center bg-gray-200 py-2 px-4 rounded-md w-full">
+				<div class="flex flex-row justify-start items-center gap-x-2 w-1/2">
+					<div>
+						<img class="w-10 h-10" src="./public/img/users/{{ user['profile_picture'] }}" alt="Photo de profil de {{ user['username'] }}" />
+					</div>
+					<div>
+						<span>{{ user['username'] }}</span>
+					</div>
+				</div>
+
+				<div class="w-1/2 flex justify-end">
+					<p>
+						<i class="fa-solid fa-trash text-red-600 hover:cursor-pointer"></i>
+					</p>
+				</div>
+			</div>
+
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

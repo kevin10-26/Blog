@@ -23,4 +23,18 @@ class AnnouncesFinder extends DbControl {
 
 		return $db->query('SELECT * FROM announces ORDER BY id DESC LIMIT 0, 1');
 	}
+
+	public function getById($id)
+	{
+		$db = new DbControl();
+
+		$args = array(
+			0 => array(
+				'field' => 'id',
+				'value' => $id
+			)
+		);
+
+		return $db->query('SELECT * FROM announces WHERE id = :id', $args);
+	}
 }

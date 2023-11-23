@@ -1,0 +1,65 @@
+{% block content %}
+<div>
+	<h1 class="text-3xl font-semibold">Gestion des centres d'intérêts</h1>
+
+	<div class="w-full grid grid-cols-4 place-items-center gap-4 mt-10">
+		
+		{% for interest, key in data %}
+		<div class="m-auto px-4 py-4 rounded-md bg-white shadow-gray-300 shadow-md hover:cursor-pointer" onclick="openInterestModal(event, '{{ interest }}')">
+			<p class="text-lg text-center font-semibold">
+				{{ key['title'] }}
+			</p>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div class="flex flex-row justify-end items-center mt-6">
+		<button class="transition-all scale-100 px-4 py-2 rounded-md bg-teal-600 text-white font-semibold hover:scale-105" onclick="addNewInterest(event);">Ajouter un centre d'intérêt</button>
+	</div>
+</div>
+
+<div id="interest-modal" class="hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4] overflow-scroll">
+
+	<div class="w-3/5 h-[75vh] overflow-auto absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+		<div id="interest-content">
+			
+		</div>
+		<span id="interest-close" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</span>
+	</div>
+</div>
+
+<div id="new-interest-modal" class="hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4] overflow-scroll">
+	<div id="new-interest-content" class="w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+		<div>
+			<p class="text-center text-2xl font-semibold">
+				<span>Ajouter un centre d'intérêt</span>
+			</p>
+
+			<form id="interest-form" action="" enctype="multipart/form-data" method="POST" class="grid grid-cols-2 grid-rows-3 mt-6 gap-4" onsubmit="submitInterest(event);">
+				<div>
+					<label for="interest-key" class="underline">Titre</label><br /><input id="key-title" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez un titre..." name="key-title" />
+				</div>
+				<div>
+					<label for="interest-title" class="underline">Titre</label><br /><input id="interest-title" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez un titre..." name="title" />
+				</div>				
+				<div>
+					<label for="achievements" class="underline">Réussites - plusieurs : séparer par "-". </label><br /><input id="achievements" class="mt-4 px-4 py-2 rounded-sm" type="text" name="achievements[]" placeholder="Entrez une ou plusieurs réussites..." />
+				</div>
+				<div>
+					<label for="description" class="underline">Description</label><br /><textarea id="description" class="w-4/5 mx-auto mt-4 px-4 py-2 rounded-sm" placeholder="Entrez une description..." name="description"></textarea>
+				</div>
+				<div>
+					<label for="content" class="underline">Contenu</label><br /><textarea id="content" class="w-4/5 mx-auto mt-4 px-4 py-2 rounded-sm" placeholder="Entrez le contenu..." name="content"></textarea>
+				</div>
+				<div>
+					<label for="interest-pictures" class="underline">Images</label><br /><input id="interest-pictures" class="mt-4 px-4 py-2 rounded-sm" type="file" accept="image/*" name="pictures[]" multiple />
+				</div>
+				<div class="col-span-2">
+					<input type="submit" class="block m-auto mt-6 px-4 py-2 rounded-md bg-teal-700 text-white hover:cursor-pointer hover:shadow-md hover:shadow-gray-400" />
+				</div>
+			</form>
+		</div>
+		<span id="new-interest-close" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</span>
+	</div>
+</div>
+{% endblock content %}

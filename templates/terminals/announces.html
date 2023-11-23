@@ -1,0 +1,26 @@
+{% block content %}
+<div>
+	<h1 class="text-3xl font-semibold dark:text-teal-300">Gestion des annonces</h1>
+
+	<div class="flex flex-col justify-center items-center sm:grid sm:grid-cols-2 gap-2 w-full mt-10">
+		<div class="flex flex-col justify-center items-start w-full h-[7.25rem] p-4 mx-4 bg-teal-500 hover:cursor-pointer rounded-md" onclick="window.location.href = './announces/new';">
+			<p class="text-xl mb-2 text-gray-100"><i class="fa-solid fa-plus-circle"></i></p>
+			<p class="text-gray-100">
+				Nouvelle annonce
+			</p>
+		</div>
+		{% for announce in data %}
+			<div class="flex flex-col justify-center items-start w-full h-fit p-4 mx-4 bg-teal-500 hover:cursor-pointer rounded-md" onclick="window.location.href = '?action=announces&view={{ announce['id'] }}';">
+				<p class="text-xl mb-2 text-gray-100"><i class="fa-solid fa-bolt-lightning"></i></p>
+				<p class="text-gray-100">
+					{{ announce['title'] }}
+				</p>
+				<p class="text-gray-100">
+					<span><a class="underline" href="./announces/edit/{{ announce['id'] }}">Modifier</a></span>&nbsp;&nbsp;<span><a class="underline" href="./announces/delete/{{ announce['id'] }}">Supprimer</a></span>
+				</p>
+			</div>
+
+		{% endfor %}
+	</div>
+</div>
+{% endblock content %}

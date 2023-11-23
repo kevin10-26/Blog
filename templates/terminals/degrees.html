@@ -1,0 +1,63 @@
+{% block content %}
+<div>
+	<h1 class="text-3xl font-semibold dark:text-teal-300">Gestion des diplômes</h1>
+
+	<div class="my-10">
+		<!-- Liste des items déjà existants -->
+		<div class="flex flex-col sm:grid sm:grid-cols-4 sm:place-items-center gap-4">
+			{% for degree, key in data %}
+
+			<div class="w-32 h-32 bg-white rounded-md hover:cursor-pointer" onclick="openDegreeModal(event, '{{ degree }}');">
+				<div class="h-1/2 text-center font-semibold text-2xl py-4">
+					<span>{{ (key['year']['start'] is defined) ? key['year']['start'] ~ ' - ' : key['year'] }}</span>
+				</div>
+				<div class="h-1/2 text-center">
+					<p>{{ key['title'] }}</p>
+				</div>
+			</div>
+
+			{% endfor %}
+		</div>
+		<!-- Bouton ajouter -->
+		<div class="flex flex-row justify-end items-center mt-6">
+			<button class="transition-all scale-100 px-4 py-2 rounded-md bg-teal-600 text-white font-semibold hover:scale-105" onclick="addNewDegree(event);">Ajouter un diplôme</button>
+		</div>
+	</div>
+</div>
+
+<div id="degree-modal" class="hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4]">
+	<div class="w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+		<div id="degree-content"></div>
+		<span id="degree-close" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</span>
+	</div>
+</div>
+
+<div id="new-degree-modal" class="hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4]">
+	<div id="new-degree-content" class="w-4/5 sm:w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+		<div>
+			<p class="text-center text-2xl font-semibold">
+				<span>Ajouter un diplôme</span>
+			</p>
+
+			<form id="degree-form" action="" method="POST" class="flex flex-col justify-center items-center sm:grid sm:grid-cols-2 sm:grid-rows-3 mt-6" onsubmit="submitDegree(event);">
+				<div class="w-4/5 sm:w-auto my-2">
+					<label for="degree-title" class="underline">Titre</label><br /><input id="degree-title" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez un  titre..." name="title" />
+				</div>
+				<div class="w-4/5 sm:w-auto my-2">
+					<label for="degree-date" class="underline">Date</label><br /><input id="degree-date" class="mt-4 px-4 py-2 rounded-sm" type="number" max="<?= date('Y') ?>" placeholder="Entrez l'année (de début si non-terminé)..." name="year" />
+				</div>
+				<div class="w-4/5 sm:w-auto my-2">
+					<label for="degree-finished" class="underline">Diplôme obtenu ? </label><input id="degree-finished" type="checkbox" name="finished" />
+				</div>
+				<div class="w-4/5 sm:w-auto my-2">
+					<label for="degree-structure" class="underline">Nouvelle structure</label><br /><input id="degree-structure" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez la nouvelle structure..." name="structure" />
+				</div>
+				<div class="col-span-2 w-4/5 sm:w-auto my-2">
+					<input type="submit" class="block m-auto mt-6 px-4 py-2 rounded-md bg-teal-700 text-white hover:cursor-pointer hover:shadow-md hover:shadow-gray-400" />
+				</div>
+			</form>
+		</div>
+		<span id="new-degree-close" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</span>
+	</div>
+</div>
+{% endblock content %}

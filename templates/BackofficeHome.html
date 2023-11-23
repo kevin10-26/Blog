@@ -1,0 +1,68 @@
+{% extends 'Layout.html' %}
+{% block content %}
+<section class="flex flex-row">
+	<aside id="sidenav-media" class="w-1/4 bg-teal-700 text-white hidden sm:block mr-4 sm:mr-auto">
+		<h1 class="text-lg font-semibold p-4">Espace d'administration</h1>
+		<p class="sm:hidden" onclick="closeNav();">&times;</p>
+
+		<div>
+			<div class="main mb-6">
+				<span class="block text-[0.9em] text-gray-300 pl-4 mb-2">Principal</span>
+				<button id="default-open" class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'overview')">
+					<i class="fa-solid fa-eye mr-4"></i><span>Vue d'ensemble</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left"  onclick="openAdminTab(event, 'settings')">
+					<i class="fa-solid fa-cog mr-4"></i><span>Paramètres</span>
+				</button>
+			</div>
+
+			<div class="management mb-6">
+				<span class="block text-[0.9em] text-gray-300 pl-4 mb-2">Gestion des interactions</span>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'users')">
+					<i class="fa-solid fa-users mr-4"></i><span>Gestion des utilisateurs</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'comments')">
+					<i class="fa-solid fa-comments mr-4"></i><span>Gestion des commentaires</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'posts')">
+					<i class="fa-solid fa-newspaper mr-4"></i><span>Gestion des publications</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'announces')">
+					<i class="fa-solid fa-bullhorn mr-4"></i><span>Gestion des annonces</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'messages')">
+					<i class="fa-regular fa-message mr-4"></i><span>Gestion des messages</span>
+				</button>
+			</div>
+
+			<div class="about">
+				<span class="block text-[0.9em] text-gray-300 pl-4 mb-2">Section "À propos"</span>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'degrees')">
+					<i class="fa-solid fa-graduation-cap mr-4"></i><span>Ajouter / modifier un diplôme</span>
+				</button>
+				<button class="tablinks block pl-6 w-full hover:bg-teal-600 hover:border-l-teal-500 hover:border-l-solid hover:border-l-4 p-4 text-left" onclick="openAdminTab(event, 'interests')">
+					<i class="fa-solid fa-plus-circle mr-4"></i><span>Ajouter / modifier un centre d'intérêt</span>
+				</button>
+			</div>
+		</div>
+	</aside>
+
+	<section id="main" class="w-full sm:w-3/4 mx-auto sm:mx-4">
+
+		<span class="sm:hidden" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+		<div id="overview" class="tabcontent"></div>
+		<div id="settings" class="tabcontent"></div>
+		<div id="users" class="tabcontent"></div>
+		<div id="comments" class="tabcontent"></div>
+		<div id="posts" class="tabcontent"></div>
+		<div id="announces" class="tabcontent"></div>
+		<div id="messages" class="tabcontent"></div>
+		<div id="degrees" class="tabcontent"></div>
+		<div id="interests" class="tabcontent"></div>
+	</section>
+</section>
+{% endblock content %}
+
+{% block js %}
+<script src="./public/js/website/Backoffice.js"></script>
+{% endblock js %}

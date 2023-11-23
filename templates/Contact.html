@@ -1,12 +1,56 @@
 {% extends 'Layout.html' %}
 {% block content %}
-	<article class="m-6 text-stone-800">
-		<header>
-			
-		</header>
-
-		<section>
+<article class="m-6 text-stone-800">
+	<section id="contact">
+		<div class="px-6 py-4 w-full sm:w-4/5">
 		
-		</section>
-	</article>
+			<hr class="w-6 border-teal-600 dark:border-teal-300 border-solid border-2" />
+			<h2 class="text-3xl font-semibold underline mb-6 dark:text-slate-300">Contact</h2>
+
+			<p class="mb-2 dark:text-slate-200 text-justify">
+			Vous avez une question à me poser, des idées à me suggérer, ou encore une demande de collaboration ? Veuillez m'envoyer un message en remplissant le formulaire ci-dessous. Pas de panique ! Je ne demande que les informations strictement nécessaires au mail. Le nom et le prénom servent à mieux vous identifier, mais vous n'êtes pas tenus de les renseigner, ce n'est que facultatif.
+			</p>
+
+			<p class="dark:text-slate-200 text-justify">
+			Ce message sera dans un premier temps stocké en base de données, afin d'effectuer une première vérification. Après cette étape, le webmaster répondra au message à l'adresse e-mail renseignée ci-dessous.
+			</p>
+
+		</div>
+
+		<form class="px-6 py-4 w-full sm:w-4/5" action="./contact/sendMsg" enctype="multipart/form-data" method="POST">
+			<div class="flex flex-col justify-center items-center sm:grid gap-4 text-lg">
+				<div class="w-full">
+					<label for="lastName" class="font-semibold dark:text-slate-200">Nom de famille :</label>
+					<input class="bg-gray-200 p-2 w-full" type="text" name="lastName" placeholder="Votre nom de famille..." />
+				</div>
+				<div class="w-full">
+					<label for="firstName" class="font-semibold dark:text-slate-200">Prénom :</label>
+					<input class="bg-gray-200 p-2 w-full" type="text" name="firstName" placeholder="Votre prénom..." />
+				</div>
+				<div class="w-full">
+					<label for="addr" class="font-semibold dark:text-slate-200">Adresse mail : <span class="text-red-600 font-bold">*</span></label>
+					<input class="bg-gray-200 p-2 w-full" type="email" name="email" placeholder="Votre adresse mail..." required />
+				</div>
+				<div class="col-span-3 w-full">
+					<label for="topic" class="font-semibold dark:text-slate-200">Sujet <span class="text-red-600 font-bold">*</span></label>
+					<input class="bg-gray-200 p-2 w-full" type="text" name="topic" id="topic" placeholder="Le sujet du message..." required />
+				</div>
+				<div class="col-span-3 w-full">
+					<label for="last-name" class="font-semibold dark:text-slate-200">Contenu : <span class="text-red-600 font-bold">*</span></label>
+					<textarea class="w-full bg-gray-200 p-2" name="content" rows="10" placeholder="Contenu du message..." required></textarea>
+				</div>
+				<div class="col-span-3 dark:text-slate-200 text-justify">
+					<p>
+					Attention ! En envoyant ce message, vous consentez aux <a class="font-semibold underline" href="?action=terms">Conditions Générales d'Utilisation (CGU)</a> et à notre <a class="font-semibold underline" href="?action=gdpr">Politique de Confidentialité</a>. Nous vous encourageons à lire ces 2 documents, afin d'être informé quant au traitement des données que vous allez soumettre.
+					</p>
+				</div>
+				<div class="col-span-3">
+					<button type="submit" class="px-6 py-4 text-black dark:text-slate-200 border-teal-600 border-2 border-solid bg-transparent hover:bg-teal-600 hover:text-white hover:cursor-pointer transition-all">
+					Envoyer le message&nbsp;&nbsp;<i class="fa-regular fa-paper-plane"></i>
+					</button>
+				</div>
+			</div>
+		</form>
+	</section>
+</article>
 {%endblock content %}

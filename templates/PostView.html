@@ -106,7 +106,7 @@
 	<script>
 
 	var XHR = new XMLHttpRequest();
-	XHR.open('POST', 'http://192.168.243.70/WS/post.php', true);
+	XHR.open('POST', 'http://192.168.185.70/WS/post.php', true);
 	XHR.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	XHR.send('topic=kittensCategory');
 
@@ -116,7 +116,7 @@
 		}
 	}
 
-    var conn = new ab.Session('ws://192.168.243.70:8080',
+    var conn = new ab.Session('ws://192.168.185.70:8080',
         function() {
             conn.subscribe('test', function(topic, data) {
                 // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
@@ -128,25 +128,6 @@
         },
         {'skipSubprotocolCheck': true}
     );
-
-
-		/*window.onload = function(e) {
-			fetch('/kevin1026/blog/async/getRelatedPosts', {
-				method: 'POST',
-				headers: {
-					"Content-Type": 'application/x-www-form-urlencoded'
-				},
-				body: 'postId={{ post["id"] }}',
-				redirect: 'follow',
-				referrerPolicy: 'no-referrer',
-				})
-				.then(function(res) {
-					return res.json();
-				})
-				.then(function(content) {
-					displayComments.call(this, content);
-				});
-		}*/
 
 		const displayComments = data => {
 			let container = document.getElementById('commentContainer');

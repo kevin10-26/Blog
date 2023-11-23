@@ -1,0 +1,25 @@
+{% block content %}
+<div>
+	<p class="text-center text-2xl font-semibold">
+	<span>Modifier : {{ title }} </span>
+	</p>
+
+	<form id="degree-form" action="" method="POST" class="grid grid-cols-2 grid-rows-3 mt-6" onsubmit="editDegree(event, '{{ title }}');">
+		<div>
+			<label for="degree-title" class="underline">Nouveau titre (actuel : {{ title }})</label><br /><input id="degree-title" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez le nouveau titre..." name="title" value="{{ title }}" />
+		</div>
+		<div>
+			<label for="degree-date" class="underline">Nouvelle date (actuelle : {{ (finished) ? year : year['start'] }})</label><br /><input id="degree-date" class="mt-4 px-4 py-2 rounded-sm" type="number" max="{{ 'now'| date('Y') }}" placeholder="Entrez la nouvelle année..." name="year" value="{{ (finished) ? year : year['start'] }}" />
+		</div>
+		<div>
+			<label for="degree-finished" class="underline">Diplôme obtenu (actuel : {{ (finished) ? 'oui' : 'non' }}) </label><input id="degree-finished" type="checkbox" name="finished" {{ (finished) ? 'checked': '' }} />
+		</div>
+		<div>
+			<label for="degree-structure" class="underline">Nouvelle structure (actuel : {{ structure }})</label><br /><input id="degree-structure" class="mt-4 px-4 py-2 rounded-sm" type="text" placeholder="Entrez la nouvelle structure..." name="structure" value="{{ structure }}" />
+		</div>
+		<div class="col-span-2">
+			<input type="submit" class="block m-auto mt-6 px-4 py-2 rounded-md bg-teal-700 text-white hover:cursor-pointer hover:shadow-md hover:shadow-gray-400" />
+		</div>
+	</form>
+</div>
+{% endblock content %}

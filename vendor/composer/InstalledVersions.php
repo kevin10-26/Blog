@@ -30,7 +30,7 @@ class InstalledVersions
     'aliases' => 
     array (
     ),
-    'reference' => '65e713bdfef025362a37a8def3718b4d648a3c25',
+    'reference' => '9091e820bb346079292a6d499016a64920448706',
     'name' => 'kevin1026/blog',
   ),
   'versions' => 
@@ -78,7 +78,7 @@ class InstalledVersions
       'aliases' => 
       array (
       ),
-      'reference' => '65e713bdfef025362a37a8def3718b4d648a3c25',
+      'reference' => '9091e820bb346079292a6d499016a64920448706',
     ),
     'mustache/mustache' => 
     array (
@@ -106,6 +106,15 @@ class InstalledVersions
       array (
       ),
       'reference' => '94920a93515081fb446bb27529f9aea6df159004',
+    ),
+    'phpmailer/phpmailer' => 
+    array (
+      'pretty_version' => 'v6.8.1',
+      'version' => '6.8.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'e88da8d679acc3824ff231fdc553565b802ac016',
     ),
     'psr/http-factory' => 
     array (

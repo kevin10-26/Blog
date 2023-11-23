@@ -6,6 +6,7 @@ use Http\Request;
 use Http\Response;
 use Blog\Template\FrontendRenderer;
 use Blog\Utilities\Sidebar;
+use Blog\Domain\ContactApp\ContactApp;
 
 class Contact
 {
@@ -32,5 +33,11 @@ class Contact
 
 		$html = $this->renderer->render('Contact', $data);
 		$this->response->setContent($html);
+	}
+
+	public function sendMail() {
+		$contact = new ContactApp();
+
+		$contact->send($this->request);
 	}
 }

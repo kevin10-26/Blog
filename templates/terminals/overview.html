@@ -1,0 +1,89 @@
+{% block content %}
+<div class="flex flex-col justify-center items-center px-4">
+	<div class="cards flex flex-col justify-center items-center sm:grid sm:grid-rows-1 sm:grid-cols-3 sm:gap-x-2 w-4/5 sm:w-full">
+
+		<div class="flex flex-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+			<div class="w-20 h-20 rounded-full bg-white flex">
+				<i class="fa-regular fa-user block m-auto text-2xl text-teal-700"></i>
+			</div>
+			<div class="text-white">
+				<p class="text-right text-2xl">
+					{{ data['overview']['cards']['number_of_users'] }}
+				</p>
+				<p>
+					Utilisateur(s)
+				</p>
+			</div>
+		</div>
+
+		<div class="flex flex-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+			<div class="w-20 h-20 rounded-full bg-white flex">
+				<i class="fa-regular fa-newspaper block m-auto text-2xl text-teal-700"></i>
+			</div>
+			<div class="text-white">
+				<p class="text-right text-2xl">
+					{{ data['overview']['cards']['number_of_posts'] }}
+				</p>
+				<p>
+					Publication(s)
+				</p>
+			</div>
+		</div>
+
+		<div class="flex flex-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+			<div class="w-20 h-20 rounded-full bg-white flex">
+				<i class="fa-regular fa-message block m-auto text-2xl text-teal-700"></i>
+			</div>
+			<div class="text-white">
+				<p class="text-right text-2xl">
+					{{ data['overview']['cards']['new_messages'] }}
+				</p>
+				<p>
+					Message(s)
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="social-traffic my-6 w-full">
+		<table class="w-full text-left bg-gray-200 shadow-2xl rounded-md shadow-gray-500">
+			<thead>
+				<tr>
+					<th colspan="2" class="p-2">Activités sur les réseaux sociaux</th>
+				</tr>
+				<tr class="bg-gray-300 text-gray-500">
+					<th class="p-2 font-normal">Réseau social</th>
+					<th class="p-2 font-normal">Visiteurs</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for key, network in data['overview']['networks'] %}
+				<tr>
+					<td class="font-semibold p-2">{{ key }}</td>
+					<td class="p-2">{{ network }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+
+	<div class="social-traffic my-6 w-full">
+		<table class="w-full text-left bg-gray-200 shadow-2xl rounded-md shadow-gray-500">
+			<thead>
+				<tr>
+					<th class="p-2">Activités récentes</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{% for activity in data['overview']['recent'] %}
+				<tr>
+					<td class="font-semibold p-2 flex flex-row items-center gap-x-4"><p class="w-10 h-10 rounded-full text-white flex" style="background-color: {{ activity['color'] }};"><i class="{{ activity['icon'] }} m-auto"></i></p><p>{{ activity['content'] }}</p></td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock content %}
