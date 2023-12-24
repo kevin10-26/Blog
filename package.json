@@ -10,5 +10,8 @@
   "license": "MIT",
   "devDependencies": {
     "tailwindcss": "^3.3.3"
+  },
+  "dependencies": {
+    "tui-editor": "^1.4.10"
   }
 }

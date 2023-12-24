@@ -27,12 +27,19 @@ return [
 	['POST', '/kevin1026/xhradmin/degrees/submit', ['Blog\Controllers\Backoffice\Alter', 'degrees']],
 	['POST', '/kevin1026/xhradmin/degrees/view/', ['Blog\Controllers\Backoffice\Requests', 'viewDegree']],
 	['POST', '/kevin1026/xhradmin/degrees/edit/', ['Blog\Controllers\Backoffice\Alter', 'degrees']],
+	['POST', '/kevin1026/xhradmin/degrees/delete/', ['Blog\Controllers\Backoffice\Alter', 'degrees']],
 
 	['POST', '/kevin1026/xhradmin/interests/submit/', ['Blog\Controllers\Backoffice\Alter', 'interests']],
 	['POST', '/kevin1026/xhradmin/interests/view/', ['Blog\Controllers\Backoffice\Requests', 'viewInterest']],
 	['POST', '/kevin1026/xhradmin/interests/edit/', ['Blog\Controllers\Backoffice\Alter', 'interests']],
 	['POST', '/kevin1026/xhradmin/interests/deletePicture/', ['Blog\Controllers\Backoffice\Alter', 'interests']],
 	['POST', '/kevin1026/xhradmin/interests/delete/', ['Blog\Controllers\Backoffice\Alter', 'interests']],
+
+	['GET', '/kevin1026/blog/writer/new/', ['Blog\Controllers\Posts\Writer', 'newPost']],
+	['POST', '/kevin1026/blog/writer/submit/', ['Blog\Controllers\Posts\Writer', 'submit']],
+	['GET', '/kevin1026/blog/writer/edit/{id}', ['Blog\Controllers\Posts\Writer', 'edit']],
+	['POST', '/kevin1026/blog/writer/update/', ['Blog\Controllers\Posts\Writer', 'updatePost']],
+	['POST', '/kevin1026/xhradmin/writer/check/', ['Blog\Controllers\Posts\Checks', 'checkWriterData']],
 
 	['POST', '/kevin1026/checks/checkUser/', ['Blog\Controllers\Checks', 'checkUser']],
 ];

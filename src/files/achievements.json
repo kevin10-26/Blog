@@ -1,21 +1,9 @@
 {
-    "test deb": {
-        "title": "test deb",
-        "finished": "true",
-        "year": "1",
-        "structure": "php"
-    },
     "test deb 2": {
         "title": "test deb 2",
         "finished": "true",
         "year": "2012",
         "structure": "PHP"
-    },
-    "TEST": {
-        "title": "TEST",
-        "finished": "true",
-        "year": "2023",
-        "structure": "test"
     },
     "not finished": {
         "title": "not finished",

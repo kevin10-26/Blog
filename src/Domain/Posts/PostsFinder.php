@@ -13,6 +13,21 @@ class PostsFinder extends DbControl {
 		return $db->query('SELECT *, DATE_FORMAT(dt_upload, \'%a. %d %b (%H:%i)\') AS \'dt_upload\', DATE_FORMAT(dt_update, \'%a %d %b (%H:%i)\') AS \'dt_update\' FROM posts ORDER BY id DESC');		
 	}
 
+	public function getPostByTitle($title)
+	{
+		$db = new DbControl();
+		
+		$args = array(0 => 
+			array(
+				'field' => 'title',
+				'value' => $title,
+			)
+		);
+
+		return $db->query('SELECT *, DATE_FORMAT(dt_upload, \'%a. %d %b (%H:%i)\') AS \'dt_upload\', DATE_FORMAT(dt_update, \'%a. %d %b (%H:%i)\') AS \'dt_update\' FROM posts WHERE title = :title', $args);
+
+	}
+
 	public function getPostById($id)
 	{
 		$db = new DbControl();
@@ -46,6 +61,28 @@ class PostsFinder extends DbControl {
 		];
 	}
 
+	public function getCategories()
+	{
+		$db = new DbControl();
+		
+		$args = array(0 => 
+			array(
+				'field' => 'field',
+				'value' => 'category',
+			)
+		);
+
+		$data = $db->query('SHOW COLUMNS FROM posts WHERE Field = :field', $args);
+
+		preg_match("/^enum\(\'(.*)\'\)$/", $data[0]['Type'], $categories);
+		$categories = explode("','", $categories[1]);
+
+		return $categories;
+	}
+
+
+	// Returns all existing domains
+
 	public function getDomains()
 	{
 		$db = new DbControl();
@@ -64,6 +101,8 @@ class PostsFinder extends DbControl {
 
 		return $domains;
 	}
+
+	// Only returns all posts of a specified domain
 
 	public function getAllOfDomain($domain)
 	{

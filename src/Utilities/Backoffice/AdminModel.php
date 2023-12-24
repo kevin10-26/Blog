@@ -85,6 +85,15 @@ class AdminModel extends DbControl
 
 	}
 
+	public function deleteDegree($data)
+	{
+		$base = json_decode(file_get_contents('./../src/files/achievements.json'), true);
+		unset($base[$data['key']]);
+
+		file_put_contents('./../src/files/achievements.json', json_encode($base, JSON_PRETTY_PRINT));
+		return true;
+	}
+
 	public function newInterest($data, $pictures)
 	{
 		$pictureNames = array();
@@ -116,13 +125,19 @@ class AdminModel extends DbControl
 
 	public function editInterest($data, $pictures)
 	{
-		$pictureNames = array();
-		for ($i = 0; $i < count($pictures['pictures']['name']); $i++)
-		{
-			$pictureNames[$i] = array(
-				'name' => $pictures['pictures']['name'][$i],
-				'alt' => 'Image : ' . $pictures['pictures']['name'][$i]
-			);
+		if (!empty($pictures['pictures']['name'][0])) {
+
+			$pictureNames = array();
+
+			for ($i = 0; $i < count($pictures['pictures']['name']); $i++)
+			{
+				$pictureNames[$i] = array(
+					'name' => $pictures['pictures']['name'][$i],
+					'alt' => 'Image : ' . $pictures['pictures']['name'][$i]
+				);
+			}
+
+			$this->uploadPicture($pictures, $data['key']);
 		}
 	
 		$base = json_decode(file_get_contents('http://' . $_SERVER['SERVER_NAME'] . '/kevin1026/src/files/interests.json'), true);
@@ -130,17 +145,15 @@ class AdminModel extends DbControl
 		$newData = array(
 			'title' => $data['title'],
 			'key_title' => $data['key'],
-			'achievements' => $data['achievements'],
-			'images' => array_merge($base[$data['key']]['images'], $pictureNames),
+			'achievements' => trim($data['achievements']),
+			'images' => (isset($pictureNames)) ? array_merge($base[$data['key']]['images'], $pictureNames) : $base[$data['key']]['images'],
 			'description' => $data['description'],
 			'content' => $data['content']
 		);
 
 		$base[$data['key']] = $newData;
 
-		if (!empty($pictures['pictures']['name'][0])) {
-			$this->uploadPicture($pictures, $data['key']);
-		}
+	//	die(var_dump($pictures['pictures']['name'][0]));
 
 		file_put_contents('./../src/files/interests.json', json_encode($base, JSON_PRETTY_PRINT));
 		return true;

@@ -3,7 +3,7 @@
 	<h1 class="text-3xl font-semibold dark:text-teal-300">Gestion des publications</h1>
 
 	<div class="flex flex-col justify-center items-center sm:grid sm:grid-cols-4 gap-4 w-full mt-10">
-		<div class="flex flex-col justify-center items-center h-72 bg-teal-500 hover:cursor-pointer transition-all hover:scale-105 rounded-md" onclick="window.location.href = './post/new';">
+		<div class="flex flex-col justify-center items-center h-72 bg-teal-500 hover:cursor-pointer transition-all hover:scale-105 rounded-md" onclick="window.location.href = './blog/writer/new/';">
 			<div class="text-white">
 				<p class="flex justify-center items-center text-4xl"><i class="fa-solid fa-plus"></i></p>
 				<p>
@@ -18,8 +18,8 @@
 					<div>
 						<p class="w-full font-semibold text-lg text-center">{{ post['title'] }}</p>
 						<div class="w-4/5 mx-auto my-2 flex flex-row justify-between items-center text-sm italic">
-							<a href="./post/delete/{{ post['id'] }}" class="text-center"><i class="fa-solid fa-trash "></i><br />Supprimer</p></a>
-							<a href="./post/edit/{{ post['id'] }}" class="text-center"><i class="fa-solid fa-pen"></i><br /> Modifier</p></a>
+							<a href="./blog/delete/{{ post['id'] }}" class="text-center"><i class="fa-solid fa-trash "></i><br />Supprimer</p></a>
+							<a href="./blog/writer/edit/{{ post['id'] }}" class="text-center"><i class="fa-solid fa-pen"></i><br /> Modifier</p></a>
 						</div>
 					</div>
 				</div>

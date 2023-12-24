@@ -1,0 +1,180 @@
+{% extends "Layout.html" %}
+{% block content %}
+<h1 class="text-3xl text-center font-semibold text-stone-800 mt-4">Nouvel article : <span id="page-title">{% if post is defined %} {{ post['title'] }} {% endif %}</span></h1>
+	<form method="POST" action="./blog/writer/submit/" enctype="multipart/form-data" class="grid grid-rows-auto grid-cols-auto p-6 gap-y-4" onsubmit="checkContent(event);">
+		<div class="col-span-2 w-4/5 m-auto ">
+			<label for="title">Titre :</label>
+			<input type="title" name="title" class="w-4/5 px-4 py-2" placeholder="Entrez le titre de l'article..." oninput="checkTitle(event);" value="{% if post is defined %}{{ post['title'] }}{% endif %}" />
+			<p id="warning-title" class="hidden text-yellow-700 font-semibold">
+				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Ce titre existe déjà.	
+			</p>
+
+		</div>
+
+		<div>
+			<label for="domain">Domaine :</label>
+			<input class="w-4/5 m-auto px-4 py-2" list="domains" name="domain" id="domain" value="{% if post is defined %}{{ post['domain'] }}{% endif %}" placeholder="Choisissez un domaine..." oninput="checkDomain(event);" />
+			<p id="warning-domain" class="hidden text-yellow-700 font-semibold">
+				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Ce domaine n'existe pas. Voulez-vous le créer quand même ?	
+			</p>
+			<datalist id="domains">
+				{% for domain in domains %}
+					<option value="{{ domain }}">{{ domain }}</option>
+				{% endfor %}
+				<option value="">Choisissez un domaine</option>
+			</datalist>
+		</div>
+
+		<div>
+			<label for="category">Catégorie :</label>
+			<input class="w-4/5 m-auto px-4 py-2" list="categories" name="category" id="category" value="{% if post is defined %}{{ post['category'] }}{% endif %}" placeholder="Choisissez une catégorie..." oninput="checkCategory(event);" />
+			<p id="warning-category" class="hidden text-yellow-700 font-semibold">
+				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Cette catégorie n'existe pas. Voulez-vous la créer quand même ?	
+			</p>
+
+			<datalist id="categories">
+				{% for category in categories %}
+					<option value="{{ category }}">{{ category }}</option>
+				{% endfor %}
+				<option value="">Choisissez une catégorie</option>
+			</datalist>
+		</div>
+
+		<div>
+			<label for="description">Description :</label><br />
+			<textarea class="w-4/5 m-auto px-4 py-2" name="description" id="description" placeholder="Entrez la description de votre article...">{% if post is defined %}{{ post['description'] }}{% endif %}</textarea>
+		</div>
+
+		<div class="place-self-center">
+			<label for="thumbnail"><p>Miniature :</p><img id="thumbnail-preview" class="w-20 h-20 object-cover" style="display:none;" /></label>
+			<input name="thumbnail" id="thumbnail" type="file" onchange="changeThumbnail(event);" />
+		</div>
+
+		<textarea name="content" id="editor">{{ post['content']}}</textarea>
+		<input id="article-submit" class="col-span-2 block m-auto border-teal-700 border-solid border-2 px-4 py-2 bg-teal-700 text-white hover:text-black hover:bg-transparent hover:cursor-pointer" type="submit" />
+	</form>
+{% endblock content %}
+{% block css %}
+	<style>
+	.tox-tinymce {
+		grid-column: 1/3;
+		margin: 1rem auto;
+	}
+
+	label {
+		display: block;
+		text-decoration: underline;
+	}
+
+	input[disabled] {
+		background: repeating-linear-gradient(
+			45deg,
+			#0F766E,
+			#0F766E 5px,
+			#75716D 5px,
+			#75716D 10px
+		);
+	</style>
+{% endblock css %}
+{% block js %}
+	<script src="https://cdn.tiny.cloud/1/mxic1g06pcs3o64yxauakjoatm33dpggzxjcsohzujlg01oe/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+	<script src="./public/js/website/TinyMCEConfig.js"></script>
+	<script>		
+		const changeThumbnail = e => {
+			const [ file ] = e.target.files;
+			if (file)
+			{
+				let img = document.getElementById('thumbnail-preview');
+				img.style.display = 'block';
+				img.src = URL.createObjectURL(file);
+				e.target.style.display = 'none';
+			}
+		}
+
+		const checkTitle = e => {
+			document.getElementById('page-title').textContent = e.target.value;
+
+			var xhr = new XMLHttpRequest();
+			xhr.responseType = 'json';
+			xhr.open('POST', './xhradmin/writer/check/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('mode=title&title=' + e.target.value);
+			
+			xhr.onreadystatechange = function(evt) {
+				if (this.status === 200 && this.readyState === 4) {
+					document.getElementById('warning-title').style.display = (this.response[0] === 'no') ? 'block' : 'none';
+				
+					if (this.response[0] === 'no') {
+						document.getElementById('article-submit').disabled = true;
+						showSnackbar.call(this, '#000', 'Un article a déjà le même titre.');
+					} else {
+						document.getElementById('article-submit').disabled = false;
+					}
+				}
+			}
+
+		}
+
+		const checkDomain = e => {
+			var xhr = new XMLHttpRequest();
+			xhr.responseType = 'json';
+			xhr.open('POST', './xhradmin/writer/check/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('mode=domain&domain=' + e.target.value);
+			
+			xhr.onreadystatechange = function(evt) {
+				if (this.status === 200 && this.readyState === 4) {
+					document.getElementById('warning-domain').style.display = (this.response[0] === 'no') ? 'block' : 'none';
+				}
+			}
+		}
+
+		const checkCategory = e => {
+			var xhr = new XMLHttpRequest();
+			xhr.responseType = 'json';
+			xhr.open('POST', './xhradmin/writer/check/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('mode=category&category=' + e.target.value);
+			
+			xhr.onreadystatechange = function(evt) {
+				if (this.status === 200 && this.readyState === 4) {
+					document.getElementById('warning-category').style.display = (this.response[0] === 'no') ? 'block' : 'none';
+				}
+			}
+		}
+
+		const checkContent = e => {
+			e.preventDefault();
+
+			let content = tinymce.activeEditor.getContent();
+			document.getElementById('editor').textContent = content;
+			{% if post is defined %}
+				e.target.setAttribute('action', '/kevin1026/blog/writer/update/');
+			{% endif %}
+			e.target.submit();
+		}
+
+	</script>
+	
+	<script>
+		/*tinymce.init({
+			selector: 'textarea#editor',
+			placeholder: 'Entrez votre contenu ici...',
+			width: '90%',
+			height: '100vh',
+			add_form_submit_trigger: true,
+			hidden_input: false
+		});*/
+	</script>
+
+	<script>
+		initEditor.call(this);
+		{% if post is defined %}
+		let thumbnail = document.getElementById('thumbnail-preview');
+		thumbnail.src = "./public/img/blog/thumbnails/{{ post['thumbnail'] }}";
+		thumbnail.style.display = 'block';
+		{% endif %}
+
+	</script>
+{% endblock js %}
+

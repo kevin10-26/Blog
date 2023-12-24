@@ -28,6 +28,11 @@ class Alter
 			echo json_encode(['ok']);
 			break;	
 
+		case 'delete':
+			$admin = new AdminModel();
+			$admin->deleteDegree($this->request->getParameters());
+			echo 'ok';
+			break;
 		}
 	}
 

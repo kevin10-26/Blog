@@ -103,7 +103,9 @@ const editDegree = (e, baseTitle) => {
 
 	xhr.onreadystatechange = function(evt) {
 		if (this.readyState === 4 && this.status === 200) {
-			console.log('done', this.response);
+			window.location.href = './backoffice/home/';
+		} else {
+			// Show snackbar
 		}
 	}
 }
@@ -121,7 +123,24 @@ const submitDegree = e => {
 
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState == 4 && xhttp.status == 200) {
-			console.log(this.response);
+			window.location.href = './backoffice/home/';
+		} else {
+			// Show snackbar
+		}
+	}
+}
+
+const deleteDegree = (e, key) => {
+	var xhr = new XMLHttpRequest();
+	xhr.open('POST', './xhradmin/degrees/delete/', true);
+	xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	xhr.send('key=' + key + '&mode=delete');
+
+	xhr.onreadystatechange = function(e) {
+		if (this.status === 200 && this.readyState === 4) {
+			window.location.href = './backoffice/home/';
+		} else {
+			// Show snackbar
 		}
 	}
 }
@@ -174,7 +193,9 @@ const editInterest = (e, baseTitle) => {
 
 	xhr.onreadystatechange = function(e) {
 		if (this.readyState === 4 && this.status === 200) {
-			//window.location.href = './backoffice/home/';
+			window.location.href = './backoffice/home/';
+		} else {
+			// Show snackbar
 		}
 	}
 }
@@ -193,7 +214,7 @@ const deleteInterestPicture = (e, keyName, pictureName) => {
 			if (this.response[0] === 'ok') {
 				document.getElementById('picture-' + pictureName).remove();
 			} else {
-				window.location.href = './backoffice/home/';
+				// Show snackbar
 			}
 		}
 	}
@@ -208,7 +229,7 @@ const deleteInterest = (e, key) => {
 	xhr.onreadystatechange = function(evt) {
 		if (this.status === 200 && this.readyState === 4) {
 			if (this.responseText === 'ok') {
-				window.location.href = './backoffice/home';
+				window.location.href = './backoffice/home/';
 			} else {
 				// Show snackbar
 			}
