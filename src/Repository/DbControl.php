@@ -6,10 +6,10 @@ use \PDO;
 
 class DbControl {
 
-	private $_host = 'localhost';
-	private $_dbName = 'blog';
-	private $_username = 'kevin';
-	private $_passwd = 'root';
+	private $_host = '';
+	private $_dbName = '';
+	private $_username = '';
+	private $_passwd = '';
 	private $_options = array(
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
 		PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names = 'fr_FR'",
