@@ -3,7 +3,6 @@ const initEditor = (dark = '') => {
 		dark = (localStorage.getItem('color-theme') === 'dark') ? true : false;
 	}
 
-	console.log('here');
 	const useDarkMode = dark; 
 	const isSmallScreen = window.matchMedia('(max-width: 1023.5px)').matches;
 
@@ -11,10 +10,10 @@ const initEditor = (dark = '') => {
 	  selector: 'textarea#editor',
 	  hidden_input: false,
 	  add_form_submit_trigger: true,
-	  plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons accordion',
+	  plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars accordion',
 	  editimage_cors_hosts: ['picsum.photos'],
 	  menubar: 'file edit view insert format tools table help',
-	  toolbar: "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
+	  toolbar: "undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap | code fullscreen preview | save print | pagebreak anchor codesample | ltr rtl",
 	  autosave_ask_before_unload: true,
 	  autosave_interval: '30s',
 	  autosave_prefix: '{path}{query}-{id}-',
@@ -65,7 +64,7 @@ const initEditor = (dark = '') => {
 	  contextmenu: 'link image table',
 	  skin: useDarkMode ? 'oxide-dark' : 'oxide',
 	  content_css: useDarkMode ? 'dark' : 'default',
-	  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }'
+	  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }' 
 	});
 }
 

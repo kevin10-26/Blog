@@ -2,57 +2,157 @@
 {% block content %}
 <h1 class="text-3xl text-center font-semibold text-stone-800 mt-4">Nouvel article : <span id="page-title">{% if post is defined %} {{ post['title'] }} {% endif %}</span></h1>
 	<form method="POST" action="./blog/writer/submit/" enctype="multipart/form-data" class="grid grid-rows-auto grid-cols-auto p-6 gap-y-4" onsubmit="checkContent(event);">
-		<div class="col-span-2 w-4/5 m-auto ">
+		{% if post is defined %}
+		<input id='base-title' type="hidden" name="base-title" value="{{ post['title'] }}" />
+		<div class="grid grid-cols-3 grid-rows-1 gap-x-4 w-full" style="grid-column: 1/5;">
+			<div class="flex flew-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+				<div class="w-20 h-20 rounded-full bg-white flex">
+					<i class="fa-regular fa-eye block m-auto text-2xl text-teal-700"></i>
+				</div>
+				<div class="text-white">
+					<p class="text-right text-2xl">
+						{{ (post['views'] is null) ? '0' : post['views'] }}
+					</p>
+					<p>
+						Vue(s)
+					</p>
+				</div>
+			</div>
+
+			<div class="flex flew-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+				<div class="w-20 h-20 rounded-full bg-white flex">
+					<i class="fa-solid fa-chevron-up block m-auto text-2xl text-teal-700"></i>
+				</div>
+				<div class="text-white">
+					<p class="text-right text-2xl">
+						{{ (post['upvotes'] is null) ? '0' : post['upvotes'] }}
+					</p>
+					<p>
+						Upvote(s)
+					</p>
+				</div>
+			</div>
+
+			<div class="flex flew-row justify-between items-center bg-teal-500 p-4 rounded-md border-b-teal-600 border-b-4 w-full my-4 sm:m-auto">
+				<div class="w-20 h-20 rounded-full bg-white flex">
+					<i class="fa-solid fa-comment block m-auto text-2xl text-teal-700"></i>
+				</div>
+				<div class="text-white">
+					<p class="text-right text-2xl">
+						{{ (post['comments'] is null) ? '0' : post['comments'] }}
+					</p>
+					<p>
+						Commentaire(s)
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="flex flex-row justify-start items-center gap-x-4 text-lg text-white">
+			<button type="button" class="px-6 py-2 bg-teal-600 border-teal-700 border-solid border-2 hover:bg-transparent hover:text-black hover:cursor-pointer rounded-sm" onclick="showReports(event);">
+				<i class="fa-regular fa-flag"></i>&nbsp;&nbsp;Voir les signalements
+			</button>
+
+			<button type="button" class="px-6 py-2 bg-red-600 border-red-700 border-solid border-2 hover:bg-transparent hover:text-black hover:cursor-pointer rounded-sm" onclick="openDeletePost(event);">
+				<i class="fa-regular fa-trash-can"></i>&nbsp;&nbsp;Supprimer la publication
+			</button>
+		</div>
+
+		{% endif %}
+
+		<div class="w-4/5 m-auto" style="grid-column: 1 / 5;">
 			<label for="title">Titre :</label>
-			<input type="title" name="title" class="w-4/5 px-4 py-2" placeholder="Entrez le titre de l'article..." oninput="checkTitle(event);" value="{% if post is defined %}{{ post['title'] }}{% endif %}" />
+			<input type="title" name="title" class="w-full px-4 py-2" placeholder="Entrez le titre de l'article..." oninput="checkTitle(event);" value="{% if post is defined %}{{ post['title'] }}{% endif %}" />
 			<p id="warning-title" class="hidden text-yellow-700 font-semibold">
 				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Ce titre existe déjà.	
 			</p>
 
 		</div>
+		
+		<div class="flex flex-row justif-between items-center gap-x-6 w-full" style="grid-column: 1/5;">
+			<div class="w-2/4">
+				<label class="inline" for="domain">Domaine :</label><button type="button" class="inline ml-2" onclick="creatorModal('domain');"><i class="fa-solid fa-plus-circle"></i></button>
+				<input class="block w-full ml-0 px-4 py-2" list="domains" name="domain" id="domain" value="{% if post is defined %}{{ post['domain'] }}{% endif %}" placeholder="Choisissez un domaine..." oninput="checkDomain(event);" />
+				<p id="warning-domain" class="hidden text-yellow-700 font-semibold">
+					<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Ce domaine n'existe pas. Voulez-vous le créer quand même ?	
+				</p>
+				<datalist id="domains">
+					{% for domain in domains %}
+						<option value="{{ domain }}">{{ domain }}</option>
+					{% endfor %}
+					<option value="">Choisissez un domaine</option>
+				</datalist>
+			</div>
 
-		<div>
-			<label for="domain">Domaine :</label>
-			<input class="w-4/5 m-auto px-4 py-2" list="domains" name="domain" id="domain" value="{% if post is defined %}{{ post['domain'] }}{% endif %}" placeholder="Choisissez un domaine..." oninput="checkDomain(event);" />
-			<p id="warning-domain" class="hidden text-yellow-700 font-semibold">
-				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Ce domaine n'existe pas. Voulez-vous le créer quand même ?	
-			</p>
-			<datalist id="domains">
-				{% for domain in domains %}
-					<option value="{{ domain }}">{{ domain }}</option>
-				{% endfor %}
-				<option value="">Choisissez un domaine</option>
-			</datalist>
+			<div class="w-2/4">
+				<label class="inline" for="category">Catégorie :</label><button type="button" class="inline ml-2" onclick="creatorModal('category');"><i class="fa-solid fa-plus-circle"></i></button>
+				<input class="block w-full ml-0 px-4 py-2" list="categories" name="category" id="category" value="{% if post is defined %}{{ post['category'] }}{% endif %}" placeholder="Choisissez une catégorie..." oninput="checkCategory(event.target.value);" />
+				<p id="warning-category" class="hidden text-yellow-700 font-semibold">
+					<i class="fa-solid fa-triangle-exclamation mr-2"></i>	
+				</p>
+
+				<datalist id="categories">
+					{% for category in categories %}
+						<option value="{{ category }}">{{ category }}</option>
+					{% endfor %}
+					<option value="">Choisissez une catégorie</option>
+				</datalist>
+			</div>
 		</div>
 
-		<div>
-			<label for="category">Catégorie :</label>
-			<input class="w-4/5 m-auto px-4 py-2" list="categories" name="category" id="category" value="{% if post is defined %}{{ post['category'] }}{% endif %}" placeholder="Choisissez une catégorie..." oninput="checkCategory(event);" />
-			<p id="warning-category" class="hidden text-yellow-700 font-semibold">
-				<i class="fa-solid fa-triangle-exclamation"></i>&nbsp;&nbsp;Cette catégorie n'existe pas. Voulez-vous la créer quand même ?	
-			</p>
+		<div class="flex flex-row justif-between items-center gap-x-6 w-full" style="grid-column: 1/5;">
+			<div class="w-2/4">
+				<label for="description">Description :</label><br />
+				<textarea class="w-full m-auto px-4 py-2" name="description" id="description" placeholder="Entrez la description de votre article...">{% if post is defined %}{{ post['description'] }}{% endif %}</textarea>
+			</div>
 
-			<datalist id="categories">
-				{% for category in categories %}
-					<option value="{{ category }}">{{ category }}</option>
-				{% endfor %}
-				<option value="">Choisissez une catégorie</option>
-			</datalist>
+			<div class="w-2/4">
+				<label for="thumbnail"><p>Miniature :</p><img id="thumbnail-preview" class="block m-auto w-20 h-20 object-cover" style="display:none;" /></label>
+				<input class="flex m-auto" name="thumbnail" id="thumbnail" type="file" onchange="changeThumbnail(event);" />
+			</div>
 		</div>
 
-		<div>
-			<label for="description">Description :</label><br />
-			<textarea class="w-4/5 m-auto px-4 py-2" name="description" id="description" placeholder="Entrez la description de votre article...">{% if post is defined %}{{ post['description'] }}{% endif %}</textarea>
-		</div>
-
-		<div class="place-self-center">
-			<label for="thumbnail"><p>Miniature :</p><img id="thumbnail-preview" class="w-20 h-20 object-cover" style="display:none;" /></label>
-			<input name="thumbnail" id="thumbnail" type="file" onchange="changeThumbnail(event);" />
-		</div>
-
-		<textarea name="content" id="editor">{{ post['content']}}</textarea>
-		<input id="article-submit" class="col-span-2 block m-auto border-teal-700 border-solid border-2 px-4 py-2 bg-teal-700 text-white hover:text-black hover:bg-transparent hover:cursor-pointer" type="submit" />
+		<textarea name="content" id="editor" style="grid-column: 1/4;">{{ post['content']}}</textarea>
+		<input id="article-submit" class="row-start-7 col-span-2 block m-auto border-teal-700 border-solid border-2 px-4 py-2 bg-teal-700 text-white hover:text-black hover:bg-transparent hover:cursor-pointer" type="submit" />
 	</form>
+	<div id="creator-modal" class="z-[2] hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4] overflow-auto">
+		<div id="creator-modal-content" class="w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+			<div>
+				<h3 class="text-center text-2xl text-stone-800" id="creator-mode"></h3>
+				<form onsubmit="createValue(event);">
+					<input id="creator-modal-mode" type="hidden" name="mode" value="" />
+					<label id="creator-label" for="creator-field"></label><input id="creator-field" class="px-4 py-2" type="text" placeholder="Entrez votre sélection..." />
+					<input name="mode" class="block m-auto border-teal-700 border-solid border-2 px-4 py-2 bg-teal-700 text-white hover:text-black hover:bg-transparent hover:cursor-pointer" type="submit" />
+				</form>
+			</div>
+			<span id="creator-modal-close" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</div>
+		</div>
+	</div>
+
+	{% if post is defined %}
+	<div id="reports-modal" class="z-[2] hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4] overflow-auto">
+		<div id="reports-content" class="w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+			<h3 class="text-center text-2xl text-stone-800">Signalements pour l'article "{{ post['title'] }}"</h3>
+			<div class="flex flex-col justify-center items-start gap-y-4" id="reports-container"></div>
+			<span id="close-reports" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer">&times;</span>
+		</div>	
+	</div>
+
+	<div id="delete-modal" class="z-[2] hidden fixed top-0 left-0 w-full h-screen bg-black/[0.4] overflow-auto">
+		<div id="delete-content" class="w-3/5 absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] p-4 m-auto bg-gray-300">
+			<h3 class="text-center text-2xl text-stone-800">Supprimer l'article "{{ post['title'] }}" ?</h3>
+			<div class="py-4">
+				<p>Une fois supprimé, vous ne pourrez plus revenir en arrière. La suppression implique celle de la miniature, des photos liées à l'article. Les signalements et interactions auront eux aussi disparus.</p>
+			</div>
+			<div class="flex flex-row justify-center items-center gap-x-4 text-white">
+				<button type="button" class="px-6 py-2 bg-teal-600 border-teal-700 border-solid border-2 hover:bg-transparent hover:text-black hover:cursor-pointer rounded-sm" onclick="closeDeleteModal(event);">Annuler</button>
+				<button type="button" class="px-6 py-2 bg-red-600 border-red-700 border-solid border-2 hover:bg-transparent hover:text-black hover:cursor-pointer rounded-sm" onclick="deletePost(event, '{{ post["id"] }}')">Supprimer</button>
+			</div>
+			<span id="close-reports" class="absolute top-3 right-5 text-3xl hover:text-red-700 hover:cursor-pointer" onclick="closeDeleteModal(event);">&times;</span>
+		</div>	
+	</div>
+
+	{% endif %}
 {% endblock content %}
 {% block css %}
 	<style>
@@ -65,7 +165,7 @@
 		display: block;
 		text-decoration: underline;
 	}
-
+		
 	input[disabled] {
 		background: repeating-linear-gradient(
 			45deg,
@@ -74,12 +174,130 @@
 			#75716D 5px,
 			#75716D 10px
 		);
+	}
+	
+	.report__card {
+		padding: 1rem 0.625rem;
+		border-bottom: solid #9CA3AF 2px;
+
+		width: 75%;
+	}
+
+	.report__card:last-child {
+		border-bottom: none;
+	}
+		
+	.report__card .object {
+		font-size: 1.1em;
+		font-weight: 600;
+	}
+
+	.report__card .dt {
+		font-style: italic;
+		color: #9CA3AF;
+		font-size: 0.9em;
+	}
 	</style>
 {% endblock css %}
 {% block js %}
 	<script src="https://cdn.tiny.cloud/1/mxic1g06pcs3o64yxauakjoatm33dpggzxjcsohzujlg01oe/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 	<script src="./public/js/website/TinyMCEConfig.js"></script>
-	<script>		
+	<script>
+		const showReports = (e) => {
+			let xhr = new XMLHttpRequest();
+			xhr.responseType = 'json';
+			xhr.open('POST', './xhradmin/reports/show/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('c_id=' + "{{ post['id'] }}" + '&c_type=post');
+
+			xhr.onreadystatechange = function(e) {
+				if (this.status === 200 && this.readyState === 4 && this.response[0] === 'ok') {
+					let reports = this.response.slice(1);
+					openReportsModal.call(this);
+					for(let i = 0; i < reports.length; i++) {
+						createReport.call(this, reports[i]);
+					}
+
+				}
+			}
+		}
+
+		const openReportsModal = () => {
+			let modal = document.getElementById('reports-modal'),
+			reports = document.getElementById('reports-container'),
+			close = document.getElementById('close-reports');
+
+			while(reports.firstChild) {
+				reports.removeChild(reports.firstChild);
+			}
+
+			modal.style.display = 'block';
+
+			close.onclick = function(e) {
+				modal.style.display = 'none';
+			}
+
+			window.onclick = function(e) {
+				if (e.target === modal) {
+					modal.style.display = 'none';
+				}
+			}
+		}
+	
+		const createReport = data => {
+			let reportContainer = document.createElement('div'),
+			reportObject = document.createElement('span');
+			reportContent = document.createElement('p'),
+			reportDateTime = document.createElement('span');
+			
+			reportContainer.classList.add('report__card');
+
+			reportObject.classList.add('object');
+			reportObject.textContent = data['object'];
+				
+			reportContent.textContent = data['description'];
+			
+			reportDateTime.classList.add('dt');
+			reportDateTime.textContent = data['dt_upload'];
+
+			reportContainer.appendChild(reportObject);
+			reportContainer.appendChild(reportContent);
+			reportContainer.appendChild(reportDateTime);
+
+			let mainContainer = document.getElementById('reports-container');
+			mainContainer.appendChild(reportContainer);
+		}
+
+		const openDeletePost = (e) => {
+			let modal = document.getElementById('delete-modal');
+
+			modal.style.display = 'block';
+
+			window.onclick = function(e) {
+				if (e.target === modal) {
+					modal.style.display = 'none';
+				}
+			}	
+		}
+
+		const closeDeleteModal = (e) => {
+			document.getElementById('delete-modal').style.display = 'none';
+		}
+
+		const deletePost = (e, postId) => {
+			let xhr = new XMLHttpRequest();
+			xhr.responseType = 'json';
+			xhr.open('POST', './xhradmin/writer/delete/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('postId=' + postId);
+
+			xhr.onreadystatechange = function(e) {
+				if (this.status === 200 && this.readyState === 4 && this.response[0] === 'deleted') {
+					window.location.href = '/kevin1026/backoffice/';	
+				}
+			}
+		}
+
 		const changeThumbnail = e => {
 			const [ file ] = e.target.files;
 			if (file)
@@ -93,6 +311,8 @@
 
 		const checkTitle = e => {
 			document.getElementById('page-title').textContent = e.target.value;
+			let baseTitle = document.getElementById('base-title');
+			if (typeof baseTitle !== 'undefined' && baseTitle.value === e.target.value) return;
 
 			var xhr = new XMLHttpRequest();
 			xhr.responseType = 'json';
@@ -125,20 +345,39 @@
 			xhr.onreadystatechange = function(evt) {
 				if (this.status === 200 && this.readyState === 4) {
 					document.getElementById('warning-domain').style.display = (this.response[0] === 'no') ? 'block' : 'none';
+					checkCategory.call(this, this.response[0]);
 				}
 			}
 		}
 
-		const checkCategory = e => {
+		const checkCategory = value => {
+			// Check the belonging domain
+			var domain = document.getElementById('domain').value;
+			domain = (domain.length > 0) ? domain : '';
+			console.log(domain);
+
 			var xhr = new XMLHttpRequest();
 			xhr.responseType = 'json';
 			xhr.open('POST', './xhradmin/writer/check/', true);
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.send('mode=category&category=' + e.target.value);
+			xhr.send('mode=category&category=' + value + '&domain=' + domain);
 			
 			xhr.onreadystatechange = function(evt) {
 				if (this.status === 200 && this.readyState === 4) {
-					document.getElementById('warning-category').style.display = (this.response[0] === 'no') ? 'block' : 'none';
+					switch (this.response[0]) {
+						case 'no':
+							document.getElementById('warning-category').style.display = 'block';
+							document.getElementById('warning-category').textContent = 'Cette catégorie n\'existe pas. Voulez-vous la créer quand même ?';
+							break;
+
+						case 'ok':
+							document.getElementById('warning-category').style.display = 'block';
+							document.getElementById('warning-category').textContent = 'Aucune publication appartenant au domaine précisé n\'appartient à cette catégorie';
+							break;
+						default:
+							document.getElementById('warning-category').style.display = 'none';
+						
+					}
 				}
 			}
 		}
@@ -154,18 +393,56 @@
 			e.target.submit();
 		}
 
-	</script>
-	
-	<script>
-		/*tinymce.init({
-			selector: 'textarea#editor',
-			placeholder: 'Entrez votre contenu ici...',
-			width: '90%',
-			height: '100vh',
-			add_form_submit_trigger: true,
-			hidden_input: false
-		});*/
-	</script>
+		const creatorModal = mode => {
+			var modal = document.getElementById('creator-modal'),
+			content = document.getElementById('creator-modal-content'),
+			close = document.getElementById('creator-modal-close'),
+			fieldMode = document.getElementById('creator-modal-mode');
+
+			fieldMode.value = mode;
+			document.getElementById('creator-field').value = document.getElementById(mode).value;
+
+			document.getElementById('creator-mode').textContent = (mode === 'domain') ? 'Ajouter un nouveau domaine' : 'Ajouter une nouvelle catégorie';
+			document.getElementById('creator-label').textContent = (mode === 'domain') ? 'Domaine' : 'Catégorie';	
+
+
+			modal.style.display = 'block';
+
+			close.onclick = function(e) {
+				modal.style.display = 'none';
+			}
+
+			window.onclick = function(e) {
+				if (e.target == modal) {
+					modal.style.display = 'none';
+				}
+			}
+		}
+
+		const createValue = e => {
+			e.preventDefault();
+
+			let mode = document.getElementById('creator-modal-mode').value;
+			let value = document.getElementById('creator-field').value;
+			console.log(mode);
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', './xhradmin/writer/setNewMode/', true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send('mode=' + mode + '&value=' + value);
+
+			xhr.onreadystatechange = function(e) {
+				if (this.status === 200 && this.readyState === 4) {
+					if (this.responseText === 'ok') {
+						document.getElementById('warning-' + mode).style.display = 'none';
+						document.getElementById(mode).value = value;
+						document.getElementById('creator-modal').style.display = 'none';
+						showSnackbar.call(this, '', 'Votre domaine / catégorie ' + value + ' a bien été ajouté(e)');
+					}
+				}
+			}
+		}
+
+	</script>	
 
 	<script>
 		initEditor.call(this);
@@ -173,7 +450,7 @@
 		let thumbnail = document.getElementById('thumbnail-preview');
 		thumbnail.src = "./public/img/blog/thumbnails/{{ post['thumbnail'] }}";
 		thumbnail.style.display = 'block';
-		{% endif %}
+		{% endif %}	
 
 	</script>
 {% endblock js %}

@@ -23,21 +23,26 @@ class Uploader extends DbControl
 		return true;
 	}
 
-	public function edit($data)
+	public function edit($data, $thumbnail)
 	{
 		$db = new DbControl();
 		$finder = new PostsFinder();
 			
-		$data['content'] = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $data['content']);	
-		$fields = array_slice($data, 3);
-		$formerPost = $finder->getPostByTitle($fields['title']);
+		$data['content'] = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $data['content']);
+	
+		$fields = array_slice($data, 4);
+		$formerPost = $finder->getPostByTitle($data['base-title']);
 
 		$wCond = array(
 			'cond' => 'id',
 			'value' => $formerPost[0]['id']
 		);
 
-		$db->update($fields, 'posts', $wCond);
+		$db->update($fields, 'posts', $wCond, false);
+		
+		if (!empty($thumbnail['thumbnail']['name'])) {
+			$this->modifyThumbnail($thumbnail['thumbnail'], $formerPost[0]['thumbnail'], $formerPost[0]['id']);
+		}
 		
 		return true;
 
@@ -84,7 +89,15 @@ class Uploader extends DbControl
 			$db->update($values, 'posts', $wCond, true);
 		    }
 		}
-	}	
+	}
+	
+	// Delete the old thumbnail, and replace it with the new one.
+	public function	modifyThumbnail($picture, $oldPicture, $id)
+	{
+		if (file_exists('./img/blog/thumbnails/' . $oldPicture)) unlink('./img/blog/thumbnails/' . $oldPicture);
+
+		$this->addThumbnail($picture, $id);
+	}
 	
 	// Check if another post with the same title exist.
 	// If this is the case, cancel the operation
@@ -97,4 +110,42 @@ class Uploader extends DbControl
 			return true;
 		}
 	}
+
+	public function addDomain($data)
+	{
+		$db = new DbControl();
+		$postsFinder = new PostsFinder();
+
+		$values = $postsFinder->getDomains();
+
+		if(in_array($data, $values)) return;
+		
+		array_push($values, $data);
+		$values = array_map(function($value) { return '"'.$value.'"'; }, $values);
+		$values = implode(', ', $values);
+
+		$db->alter('posts', 'domain', $values, 'enum');
+
+		return true;
+		
+	}
+
+	public function addCategory($data)
+	{
+		$db = new DbControl();
+		$postsFinder = new PostsFinder();
+
+		$values = $postsFinder->getCategories();
+
+		if(in_array($data, $values)) return;
+		
+		array_push($values, $data);
+		$values = array_map(function($value) { return '"'.$value.'"'; }, $values);
+		$values = implode(', ', $values);
+
+		$db->alter('posts', 'category', $values, 'enum');
+
+		return true;	
+	}
+
 }

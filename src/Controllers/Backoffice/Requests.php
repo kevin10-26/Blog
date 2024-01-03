@@ -18,6 +18,7 @@ use Blog\Domain\Posts\PostsFinder;
 use Blog\Domain\Announces\AnnouncesFinder;
 use Blog\Domain\ContactApp\ContactApp;
 use Blog\Domain\About\AboutFinder;
+use Blog\Domain\Reports\ReportsFinder;
 
 class Requests
 {
@@ -63,6 +64,11 @@ class Requests
 			//	die(var_dump($data));
 				break;
 
+			case 'reports':
+				$dataFinder = new ReportsFinder();
+				$data = [0 => array("data" => $dataFinder->getAll())];
+				break;
+
 			case 'users':
 				$dataFinder = new UsersModel();
 				$data = [0 => array("data" => $dataFinder->getUsers())];
@@ -103,7 +109,7 @@ class Requests
 				throw new Exception('Erreur fatale : les informations recherchées n\'ont pas pu être trouvées');
 		}
 
-		# die(print_r($data));
+		# die(print_r($data[0]));
 
 		$html = $this->renderer->render('/terminals/' . $mode, $data[0]);
 		$this->response->setContent($html);

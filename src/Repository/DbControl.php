@@ -15,6 +15,7 @@ class DbControl {
 		PDO::MYSQL_ATTR_INIT_COMMAND => "SET lc_time_names = 'fr_FR'",
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 	);
+	private const NOT_NULLABLE = 'NOT NULL';
 
 	private function connect()
 	{
@@ -43,8 +44,7 @@ class DbControl {
 			}
 		}
 
-
-		$query->execute();	
+		$query->execute();
 
 		$results = [];
 		while ($result = $query->fetch(PDO::FETCH_ASSOC)) {
@@ -87,7 +87,7 @@ class DbControl {
 
 	protected function update($uData, $table, $wCond, $isThumbnail = false)
 	{
-		if ($isThumbnail) $uData['dt_update'] = 'NOW()';		
+		if (!$isThumbnail) $uData['dt_update'] = 'NOW()';	
 		
 		$values = array();
 		foreach ($uData as $k => $v)
@@ -104,12 +104,12 @@ class DbControl {
 		$values = implode(', ', $values);
 		$strCond = implode(' = ', $wCond);
 
-		$uQuery = 'UPDATE ' . $table . ' SET ' . $values . 'WHERE ' . $strCond;
+		$uQuery = 'UPDATE ' . $table . ' SET ' . $values . ' WHERE ' . $strCond;
 		$db = $this->connect();
 
 		$update = $db->prepare($uQuery);	
 			
-		if ($isThumbnail) unset($uData['dt_update']);
+		if (!$isThumbnail) unset($uData['dt_update']);
 		// Bind params
 		foreach ($uData as $k => $v) {
 			$update->bindValue(":{$k}", $v);
@@ -118,4 +118,50 @@ class DbControl {
 		$update->execute();
 
 	}
+	
+	// $alter = $type($values)
+	// Flags : nullable, after
+	public function alter($table, $col, $vals, $type, $flags = null)
+	{
+		$alter = $type . '(' . $vals . ')';
+		$aQuery = 'ALTER TABLE ' . $table . ' MODIFY COLUMN ' . $col . ' ' . $alter;
+		$db = $this->connect();
+		$alter = $db->prepare($aQuery);
+		$alter->execute();
+
+		$alter->closeCursor();
+		return true;
+	}
+	
+	// Abbr for 'delete', as it's a reserved word in PhP
+	public function delt($table, $wCond)
+	{
+		$conds = array();
+		$values = array();
+		for ($i = 0; $i < count($wCond); $i++)
+		{
+			$param = ':'.$wCond[$i]['field'];
+			$tmp = [$wCond[$i]['field'], $param];
+
+			array_push($conds, implode(' = ', $tmp));
+
+			// Values now
+			array_push($values, $wCond[$i]['value']);
+		}
+
+		$conds = implode(' AND ', $conds);	
+
+		$dString = 'DELETE FROM ' . $table . ' WHERE ' . $conds;
+
+		$db = $this->connect();
+		$deleter = $db->prepare($dString);
+		
+		foreach ($wCond as $k => $v) {
+			$deleter->bindValue(":{$wCond[$k]['field']}", $v['value']);
+		}
+
+		$deleter->execute();
+	
+	}
+
 }

@@ -47,8 +47,6 @@ class View extends Exception
 			'ofDomain' => $postsFinder->otherOfDomain($postsFinder->getPostById($postId)['domain'], $postId)
 		];
 
-		//echo $data['post']['content'];
-
 		$html = $this->renderer->render('PostView', $data);
 		$this->response->setContent($html);
 	}

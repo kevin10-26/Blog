@@ -8,6 +8,7 @@ use Blog\Template\FrontendRenderer;
 use Blog\Utilities\Sidebar;
 use Blog\Domain\Posts\PostsFinder;
 use Blog\Domain\Posts\Uploader;
+use Blog\Domain\Posts\Deleter;
 
 class Writer
 {
@@ -51,7 +52,9 @@ class Writer
 			'domains' => $postsFinder->getDomains(),
 			'categories' => $postsFinder->getCategories(),
 			'post' => $postsFinder->getPostById($this->request->getParameter('id'))
-		];	
+		];
+
+		$data['post']['content'] = html_entity_decode($data['post']['content']);
 
 		$html = $this->renderer->render('Writer', $data);
 		$this->response->setContent($html);
@@ -86,6 +89,17 @@ class Writer
 			}
 		} else {
 			throw new \Exception('Erreur lors du traitement des données');
+		}
+
+	}
+
+	public function deletePost()
+	{
+		$deleter = new Deleter();
+
+		if($deleter->removePost($this->request->getParameter('postId'))) {
+			echo json_encode(array('deleted'));
+			exit;
 		}
 
 	}

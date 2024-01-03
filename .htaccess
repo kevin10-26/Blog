@@ -35,6 +35,10 @@ RewriteRule ^blog/writer/submit/ ?action=blog&writer&submit
 RewriteRule ^blog/writer/edit/([^/]*) ?action=blog&writer&edit&id=$1 [B]
 RewriteRule ^blog/writer/update/ ?action=blog&writer&update
 RewriteRule ^xhradmin/writer/check/ ?action=blog&writer&check
+RewriteRule ^xhradmin/writer/setNewMode/ ?action=blog&writer&setmode
+RewriteRule ^xhradmin/writer/delete/ ?action=blog&writer&deletePost
+
+RewriteRule ^xhradmin/reports/show/ ?action=blog&xhr&showReports
 
 RewriteRule ^blog/search/([^/]*) ?action=blog&mode=search&d=$1 [B]
 RewriteRule ^blog/post/([^/]*) ?action=blog&mode=viewPost&id=$1 [B]

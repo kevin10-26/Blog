@@ -21,9 +21,15 @@
 			<p class="my-4 text-sm italic font-semibold text-stone-500 dark:text-gray-400">
 				Publié le {{ post['dt_upload'] }}. {{ (post['dt_update'] is not empty) ? 'Actualisé le ' ~ post['dt_update'] : '' }}
 			</p>
+			
+			<div class="flex flex-row justify-start items-center gap-x-4">
+				<div class="w-fit font-semibold px-4 py-2 border-teal-600 border-solid border-2 dark:text-gray-200 hover:cursor-pointer hover:bg-teal-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
+					Sauvegarder cette publication&nbsp;&nbsp;<i class="fa-regular fa-bookmark"></i>
+				</div>
 
-			<div class="w-fit font-semibold px-4 py-2 border-teal-600 border-solid border-2 dark:text-gray-200 hover:cursor-pointer hover:bg-teal-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
-				Sauvegarder cette publication&nbsp;&nbsp;<i class="fa-regular fa-bookmark"></i>
+				<div class="w-fit font-semibold px-4 py-2 border-red-600 border-solid border-2 dark:text-gray-200 hover:cursor-pointer hover:bg-red-600 hover:text-white" onclick="window.location.href = './home/posts/save/{{ post['id'] }}';">
+					Signaler cette publication&nbsp;&nbsp;<i class="fa-regular fa-flag"></i>
+				</div>
 			</div>
 		</header>
 

@@ -40,6 +40,9 @@ return [
 	['GET', '/kevin1026/blog/writer/edit/{id}', ['Blog\Controllers\Posts\Writer', 'edit']],
 	['POST', '/kevin1026/blog/writer/update/', ['Blog\Controllers\Posts\Writer', 'updatePost']],
 	['POST', '/kevin1026/xhradmin/writer/check/', ['Blog\Controllers\Posts\Checks', 'checkWriterData']],
+	['POST', '/kevin1026/xhradmin/writer/setNewMode/', ['Blog\Controllers\Posts\Checks', 'setNewMode']],
+	['POST', '/kevin1026/xhradmin/writer/delete/', ['Blog\Controllers\Posts\Writer', 'deletePost']],
+	['POST', '/kevin1026/xhradmin/reports/show/', ['Blog\Controllers\Reports\Lists', 'show']],
 
 	['POST', '/kevin1026/checks/checkUser/', ['Blog\Controllers\Checks', 'checkUser']],
 ];

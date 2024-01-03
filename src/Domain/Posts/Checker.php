@@ -3,6 +3,7 @@
 namespace Blog\Domain\Posts;
 
 use Blog\Repository\DbControl;
+use Blog\Domain\Posts\PostsFinder;
 
 class Checker extends DbControl
 {
@@ -46,7 +47,7 @@ class Checker extends DbControl
 		}
 	}
 
-	public function checkCategory($data)
+	public function checkCategory($data, $domain)
 	{
 		$db = new DbControl();
 
@@ -60,8 +61,20 @@ class Checker extends DbControl
 		$res = $db->query('SHOW COLUMNS FROM posts WHERE Field = :category', $args);
 		$categories = $this->parseColumn($res);
 		
-		if (in_array($data, $categories))	{
-			return $data;
+		if (in_array($data, $categories)) {
+
+			if (!empty($domain)) {
+				$postsFinder = new PostsFinder();
+				$postsOfDomain = $postsFinder->getAllOfDomain($domain);
+				$categoriesUsed = array_unique(array_column($postsOfDomain, 'category'));
+				if (!in_array($data, $categoriesUsed)) {
+					return 'ok';
+				} else {
+					return $data;
+				}
+			} else {
+				return $data;
+			}
 		} else {
 			return false;
 		}
